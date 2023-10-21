@@ -184,10 +184,11 @@ void verif_borne(int nbpers, int flagcout)
 	flagcout && cout <<"nbpers="<<nbpers<<" i= ";
 
 	bool flag=false;
-	int i=1;
+
+	int i=0;
 	while( i < 50)
 	{
-		flagoutplus && cout <<"trace i="<<i<< "flag="<<flag<< endl;
+		flagoutplus && cout <<"trace i="<<i<< " flag="<<flag<< endl;
 		if ( !simu->simule(1,flag) )
 		{
 			if( flag )
@@ -195,13 +196,15 @@ void verif_borne(int nbpers, int flagcout)
 			else
 			{
 				flag = true;
-				flagcout && cout <<i<<" , ";
+				flagcout && cout << i <<" , ";
 			}
 		}
 		else
 		{
-			flagoutplus && cout << "verif_tour="<< verif_tour(i-1)<<endl;
+			flagoutplus && cout << "verif_tour="<< verif_tour(i)<<endl;
 			flagoutplus && cout <<"nbTentatives=" << simu->getNbTentatives()<<endl;
+//			simu->affResult();
+
 			i++;
 		}
 		flagoutplus && cout <<"nbTentatives=" << simu->getNbTentatives()<<endl;

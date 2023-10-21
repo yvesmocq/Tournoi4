@@ -241,7 +241,8 @@ bool Tirage::makeTirage(bool fl2)
 
 		for( auto dec:this->partInt.getList())
 		{
-			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2) && maxIndice < double(vp.size())/2  )
+//			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2) && maxIndice < double(vp.size())/2  )
+			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2) )
 			{
 				flagcout && cout <<"rec_app true"<<endl;
 				flagok = true;

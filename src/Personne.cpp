@@ -65,12 +65,20 @@ void Personne::mkMaskMatch()
 	this->maskMatch2.reset();
 	for( Match * pm: this->matches )
 	{
-		for( int pid: pm->getPersId() )
+		if ( pm->istittable() )
 		{
-			if ( this->maskMatch1.isBit(pid) )
-				this->maskMatch2.setBit(pid);
-			else
-				this->maskMatch1.setBit(pid);
+			this->maskMatch1.setBit(0);
+			this->maskMatch2.setBit(0);
+		}
+		else
+		{
+			for( int pid: pm->getPersId() )
+			{
+				if ( this->maskMatch1.isBit(pid) )
+					this->maskMatch2.setBit(pid);
+				else
+					this->maskMatch1.setBit(pid);
+			}
 		}
 	}
 }

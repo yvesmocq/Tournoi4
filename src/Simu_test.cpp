@@ -218,7 +218,7 @@ void verif_borne(int nbpers, int flagcout)
 }
 bool test_simubig()
 {
-	for ( int i = 12 ; i <= 80 ; i++)
+	for ( int i = 8 ; i <= 80 ; i++)
 	{
 
 		// cout << "verf_borne i="<<i<<endl;

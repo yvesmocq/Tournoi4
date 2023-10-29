@@ -222,7 +222,7 @@ bool test_simubig()
 	{
 
 		// cout << "verf_borne i="<<i<<endl;
-		verif_borne( i , true);
+		verif_borne( i , false);
 
 		Tirage *pt = Tirage::getInstance();
 		for ( int j = 0 ; j < pt->getNbTours() ; j++ )

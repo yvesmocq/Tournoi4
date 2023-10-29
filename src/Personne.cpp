@@ -6,9 +6,17 @@
  */
 
 #include "Personne.h"
+#include "Tools.h"
+#include <cstring>
 
 // static
 int Personne::serie_id_pers=1;
+
+// static
+Personne::P_Less Personne::PersonneLess=P_Less();
+Personne::P_More Personne::PersonneMore=P_More();
+Personne::P_NameLess Personne::PNameLess=P_NameLess();
+
 
 // static
 void Personne::resetSerieId(){
@@ -18,7 +26,7 @@ void Personne::resetSerieId(){
 Personne::Personne():id_pers(serie_id_pers) {
 	serie_id_pers++;
 }
-Personne::Personne(const string &n):name(n),id_pers(serie_id_pers) {
+Personne::Personne(const string &n):name(n),nameSimple(Tools::getInstance()->toSimple(n)+name), id_pers(serie_id_pers) {
 	serie_id_pers++;
 }
 Personne::Personne(int id):id_pers(id) {
@@ -30,7 +38,7 @@ Personne::~Personne()
 {}
 
 
-int Personne::getResult()
+int Personne::calculResult()
 {
 	if ( this->nbScore != (int)this->matches.size() )
 	{
@@ -49,14 +57,14 @@ int Personne::getResult()
 	}
 	return this->result;
 }
-double Personne::setNote()
+double Personne::calculNote()
 {
-	this->getResult();
+	this->calculResult();
 	if ( id_pers == 0)
 		this->note = -1;
 	else
 		this->note = double(result)+ this->diff*0.01+Tools::doubleRand()*0.0001;
-	return this-> note;
+	return this->note;
 }
 
 void Personne::mkMaskMatch()
@@ -93,17 +101,44 @@ void Personne::addMatch(Match *m)
 void Personne::setName(const string & name)
 {
 	this->name = name;
+	this->nameSimple = Tools::getInstance()->toSimple(name)+name;
 }
 const string & Personne::getName() const
 {
 	return this->name;
 }
-string Personne::toStr(){
+const string & Personne::getNameSimple() const
+{
+	return this->nameSimple;
+}
+double Personne::getNote() const
+{
+	return this->note;
+}
+const Mask<> & Personne::getMaskMatch1() const
+		{
+	return this->maskMatch1;
+		}
+const Mask<> &  Personne::getMaskMatch2() const
+		{
+	return this->maskMatch2;
+		}
+double  Personne::getResult() const
+{
+	return this->result;
+}
+void Personne::setId_prov(int id_prov)
+{
+	this->id_prov = id_prov;
+}
+
+
+string Personne::toStr() const{
 	char str[10];
 	sprintf(str,"%*d",2,id_prov+1);
 	return string(str);
 }
-string Personne::toStrName(){
+string Personne::toStrName() const{
 	char str[100];
 	char str2[30];
 	strcpy(str,name.c_str());
@@ -112,7 +147,7 @@ string Personne::toStrName(){
 	return string(str2);
 }
 
-string Personne::mkLigne()
+string Personne::mkLigne() const
 {
 	stringstream ss;
 
@@ -133,3 +168,44 @@ string Personne::mkLigne()
 }
 
 
+string Personne::numName() const
+{
+	stringstream ss;
+
+	ss << (id_prov+1) <<". "<< name;
+
+	return ss.str();
+
+
+}
+
+// static function
+//void sortnum( vector<Personne *> & vec, function<bool(Personne *,Personne *)> fct)
+void Personne::sortnum( vector<Personne *> & vec, function<bool(Personne *,Personne *)> fct)
+{
+	sort(vec.begin(),vec.end(),fct);
+	for ( int i = 0 ; i < (int)vec.size() ; i++)
+	{
+		vec[i]->setId_prov(i);
+	}
+}
+
+void Personne::setPresent( bool flag)
+{
+	present = flag;
+}
+bool Personne::isPresent() const
+{
+	return present;
+}
+
+FlatPers Personne::getFlat() const
+{
+	FlatPers fp={};
+	fp.id = id_pers;
+	strncpy(fp.name.data(), name.c_str(), 39);
+
+
+	return fp;
+
+}

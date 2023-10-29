@@ -16,11 +16,13 @@ using namespace std;
 class Personne;
 class Match {
 	array<int,4> pers;
-	array<Personne*,4> personnes;
-	bool resultInit;
 	array<int,4> result;
 	array<int,4> score; //score de chacun avant le match;
 	array<int,4> diff;
+
+	int numTour;
+	bool resultInit;
+	array<Personne*,4> personnes;
 
 public:
 	Match(array<Personne *,4> personnes );
@@ -40,6 +42,9 @@ public:
 	array<int,4> getScore() const; //score de chacun avant le match;
 	array<int,4> getDiff() const;
 	bool istittable() const;
+
+	void setNumTour( int numTour );
+
 
 };
 

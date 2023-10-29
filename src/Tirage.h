@@ -32,22 +32,13 @@ private:
 	vector<Personne *> allPersonnes;
 	list<Match *> allMatches;
 	vector<list<Match*>> allTours;
-	struct
-	    {
-	        bool operator()(Personne *p1, Personne *p2) const { return p1->note < p2->note;}
-	    }
-	    PersonneLess;
-		struct
-		    {
-		        bool operator()(Personne *p1, Personne *p2) const { return p1->note > p2->note;}
-		    }
-		PersonneMore;
 
 	int maxIndice;
 
 	int nbTentatives;
 	const int borneTentatives=20000;
 public:
+	void save(string fileName) const;
 	static Tirage *getInstance();
 	~Tirage();
 	int id_match=0;
@@ -55,7 +46,7 @@ public:
 	bool makeTirage(bool fl2=false);
 
 	void addPersonne(Personne *p);
-	void addMatch(Match *m);
+	void addMatch(Match *m, int numTour);
 	void affResult();
 	const list<Match *> &getLastTour() const;
 	const list<Match *> &getTour(int n) const;

@@ -96,22 +96,22 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, list<
 			flborne = (indpers >= (int)vp.size());
 			if ( ! flborne )
 			{
-				if ( flagtittable && ! vp[indpers]->maskMatch1.isBit(0))
+				if ( flagtittable && ! vp[indpers]->getMaskMatch1().isBit(0))
 					fltrouve = true;
 				else
 				{
 					if( fl2 )
 					{
-						fltrouve = !vp[indpers]->maskMatch2.isBits(maskdeja);
+						fltrouve = !vp[indpers]->getMaskMatch2().isBits(maskdeja);
 						result[indres] = vp[indpers]->id_pers;
 						fltrouve = fltrouve && isGood3(result, indres+1);
 
 					}
 					else
-						fltrouve = !vp[indpers]->maskMatch1.isBits(maskdeja);
+						fltrouve = !vp[indpers]->getMaskMatch1().isBits(maskdeja);
 				}
 
-				if ( flagtittable && fltrouve && vp[indpers]->maskMatch1.isBit(0) )
+				if ( flagtittable && fltrouve && vp[indpers]->getMaskMatch1().isBit(0) )
 					fltrouve =false;
 
 			}
@@ -225,11 +225,11 @@ bool Tirage::makeTirage(bool fl2)
 
 		for ( Personne * p : allPersonnes)
 		{
-			p->setNote();
+			p->calculNote();
 			p->mkMaskMatch();
 		}
 
-		sort(vp.begin(), vp.end(), PersonneLess);
+		sort(vp.begin(), vp.end(), Personne::PersonneLess);
 
 
 
@@ -270,14 +270,14 @@ bool Tirage::makeTirage(bool fl2)
 
 	for ( Match *m: newmatch)
 	{
-		addMatch(m);
+		addMatch(m, allTours.size()-1);
 	}
 
 	return true;
 }
 
 // il s'agit de la validation definitve du match on meme à jour l'objet Personne
-void Tirage::addMatch(Match *m)
+void Tirage::addMatch(Match *m, int numTour)
 {
 	int nbzero=0;
 	for ( auto p: m->getPersonnes() )
@@ -296,6 +296,7 @@ void Tirage::addMatch(Match *m)
 			mask_3set.insert(mask);
 		}
 	}
+	m->setNumTour(numTour);
 }
 bool Tirage::isGood3(array<int,4> arr, int nb ) const
 {
@@ -335,16 +336,16 @@ void Tirage::affResult()
 
 	for ( Personne * p : allPersonnes)
 	{
-		p->setNote();
+		p->calculNote();
 	}
 
-	sort(vp.begin(), vp.end(), PersonneMore);
+	sort(vp.begin(), vp.end(), Personne::PersonneMore);
 
 	vp.pop_back();
 
 	for( int i = 0 ; i < (int)vp.size() ; i++ )
 	{
-		vp[i]->id_prov = i;
+		vp[i]->setId_prov(i);
 	}
 
 

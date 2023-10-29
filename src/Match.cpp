@@ -19,8 +19,8 @@ result({0,0,0,0})
 		Personne *p =  personnes[i];
 		this->personnes[i] = p;
 		pers[i] = p->id_pers;
-		score[i] = p->result;
-		sumscore += p->result;
+		score[i] = p->getResult();
+		sumscore += p->getResult();
 	}
 	sumscore /= 4.;
 	for( int i=0 ; i < 4 ; i++)
@@ -189,5 +189,9 @@ array<int,4> Match::getScore() const
 array<int,4> Match::getDiff() const
 {
 	return diff;
+}
+void Match::setNumTour(int numTour)
+{
+	this->numTour = numTour;
 }
 

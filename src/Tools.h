@@ -22,9 +22,13 @@ private :
 	default_random_engine generator;
 	normal_distribution<double> distribution;
 
+	array<char,256> tabconvacc;
+	void inittabconvacc();
+
 	Tools();
 
 public:
+
 	static const size_t sizeMax=256;
 
 	static Tools * getInstance();
@@ -49,6 +53,8 @@ public:
 		}
 		return ss.str();
 	}
+
+	string toSimple( string from) const;
 
 
 };

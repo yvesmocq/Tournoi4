@@ -17,10 +17,18 @@
 #include "Match.h"
 #include "PartitionInt.h"
 
+struct FlatTirage
+{
+	array<FlatPers,Tools::sizeMax> allPers;
+	array<FlatMatch,Tools::matchMax> allMatches;
+};
+
 class Tirage {
 private:
 	PartitionInt partInt;
 	Tirage();
+	Tirage(const FlatTirage &ft);
+
 	static Tirage *instance;
 
 	set<Mask<>> mask_3set;
@@ -33,6 +41,10 @@ private:
 	list<Match *> allMatches;
 	vector<list<Match*>> allTours;
 
+	array<Personne *, 4> convArray(array<int,4> arr) const;
+
+	string nomFichier;
+
 	int maxIndice;
 
 	int nbTentatives;
@@ -40,13 +52,16 @@ private:
 public:
 	void save(string fileName) const;
 	static Tirage *getInstance();
+	static Tirage * getInstance(const FlatTirage &ft);
+	static Tirage * getInstance( const string &nomFichier);
+
 	~Tirage();
 	int id_match=0;
 
 	bool makeTirage(bool fl2=false);
 
 	void addPersonne(Personne *p);
-	void addMatch(Match *m, int numTour);
+	int addMatch(Match *m);
 	void affResult();
 	const list<Match *> &getLastTour() const;
 	const list<Match *> &getTour(int n) const;
@@ -58,6 +73,12 @@ public:
 	{
 		return allTours.size();
 	}
+	FlatTirage getFlat() const;
+
+
+	void setNomFichier( const string &nomFichier );
+
+	void save() const;
 
 };
 

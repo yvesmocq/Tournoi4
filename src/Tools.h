@@ -28,8 +28,11 @@ private :
 	Tools();
 
 public:
-
-	static const size_t sizeMax=256;
+	static const size_t clubMax=16; // nombre maximum de club
+	static const size_t sizeMax=128; // nombre max de personne +1
+	static const size_t matchMax=(sizeMax/4)*20; // nombre maximum de clubs
+	static const size_t sizeNameMax=40; // taille max des noms
+	static const size_t sizeNCMax=16; // talle max accronyme du club
 
 	static Tools * getInstance();
 	virtual ~Tools();
@@ -53,8 +56,23 @@ public:
 		}
 		return ss.str();
 	}
+	string to_string(vector<int> t)
+	{
+
+		stringstream ss("vector<>{");
+		for( size_t i = 0 ; i < t.size() ; i ++)
+		{
+			ss << t[i];
+			if ( i == t.size()-1)
+				ss << "}";
+			else
+				ss << ",";
+		}
+		return ss.str();
+	}
 
 	string toSimple( string from) const;
+	int cmp( const char *p1, const char *p2, size_t s) const;
 
 
 };

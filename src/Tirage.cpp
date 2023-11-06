@@ -10,18 +10,47 @@ using namespace std;
 #include <set>
 #include <array>
 #include <algorithm>
+#include <string>
 
 #include "Tirage.h"
+
+
 
 
 
 //
 Tirage * Tirage::instance=nullptr;
 
-Tirage::Tirage() {
+Tirage::Tirage():maxIndice(0),nbTentatives(0) {
 	Personne::resetSerieId();
 
 }
+Tirage::Tirage(const FlatTirage &ft):maxIndice(0),nbTentatives(0)
+{
+	for( const FlatPers & fp:ft.allPers)
+	{
+		if ( fp.isValid)
+		{
+			Personne *p = new Personne(fp);
+			allPersonnes.push_back(p);
+		}
+	}
+	for( const FlatMatch &fm:ft.allMatches )
+	{
+		if ( fm.isValid)
+		{
+			Match *m = new Match(convArray(fm.pers));
+			if ( fm.resultInit )
+			{
+				m->setResult(fm.result);
+			}
+			addMatch(m);
+		}
+
+	}
+
+}
+
 Tirage::~Tirage() {
 	for( auto p: allPersonnes)
 		delete p;
@@ -33,6 +62,7 @@ Tirage::~Tirage() {
 	instance=nullptr;
 }
 
+// static function
 Tirage * Tirage::getInstance()
 {
 	if ( instance == nullptr )
@@ -40,6 +70,40 @@ Tirage * Tirage::getInstance()
 		instance = new Tirage();
 	}
 	return instance;
+}
+// static function
+Tirage * Tirage::getInstance(const FlatTirage &ft)
+{
+	if ( instance != nullptr )
+	{
+		delete instance;
+	}
+	instance = new Tirage(ft);
+	return instance;
+}
+
+Tirage *Tirage::getInstance( const string & nomFichier)
+{
+	FILE *fd=fopen(nomFichier.c_str(),"rb");
+	if ( fd == NULL )
+	{
+		cout <<"Il n'y a pas de fichier de sauvegarde on repart à zéro"<<endl;
+		return getInstance();
+	}
+	FlatTirage ft;
+	int res = fread(&ft, sizeof(FlatTirage), 1, fd);
+	if ( res != 1 )
+	{
+		cout << "problème lecture fichier"<<endl;
+		fclose(fd);
+		return getInstance();
+	}
+	fclose(fd);
+
+	Tirage *pt =getInstance(ft);
+
+	pt->setNomFichier( nomFichier );
+
 }
 
 
@@ -266,28 +330,35 @@ bool Tirage::makeTirage(bool fl2)
 	if ( !flagok )
 		return false;
 
-	allTours.push_back(newmatch);
-
+//	allTours.push_back(newmatch);
+// allTour est maintenant géré dans addMatch
 	for ( Match *m: newmatch)
 	{
-		addMatch(m, allTours.size()-1);
+		addMatch(m);
 	}
 
 	return true;
 }
 
-// il s'agit de la validation definitve du match on meme à jour l'objet Personne
-void Tirage::addMatch(Match *m, int numTour)
+// il s'agit de la validation definitve du match on met à jour l'objet Personne
+int Tirage::addMatch(Match *m)
 {
 	int nbzero=0;
+	int rang=0;
 	for ( auto p: m->getPersonnes() )
 	{
 		if ( p->id_pers == 0 )
 			nbzero++;
 		if ( nbzero > 1)
 			break;
-		p->addMatch(m);
+		int r = p->addMatch(m);
+		rang = max(r, rang);
 	}
+	if ( rang > (int)allTours.size() )
+	{
+		allTours.push_back(list<Match *>());
+	}
+	allTours.back().push_back(m);
 	allMatches.push_back(m);
 	if ( !m->istittable() )
 	{
@@ -296,7 +367,8 @@ void Tirage::addMatch(Match *m, int numTour)
 			mask_3set.insert(mask);
 		}
 	}
-	m->setNumTour(numTour);
+	m->setNumTour(allTours.size()-1);
+	return rang;
 }
 bool Tirage::isGood3(array<int,4> arr, int nb ) const
 {
@@ -379,4 +451,46 @@ int Tirage::getNbTentatives() const
 int Tirage::getMaxIndice() const
 {
 	return maxIndice;
+}
+
+FlatTirage Tirage::getFlat() const
+{
+	FlatTirage ft={0};
+	int i_pers=0;
+	for ( Personne *p : allPersonnes )
+	{
+		ft.allPers[i_pers++] = p->getFlat();
+	}
+	int i_match=0;
+	for ( Match *m : allMatches )
+	{
+		ft.allMatches[i_match++] = m->getFlat();
+	}
+	return ft;
+}
+array<Personne *,4> Tirage::convArray(array<int,4> arr) const
+{
+	array<Personne *,4> res;
+	for ( int i= 0 ; i < 4 ; i++ )
+	{
+		res[i] = allPersonnes[arr[i]];
+	}
+	return res;
+}
+
+void Tirage::setNomFichier(const string &nomFichier)
+{
+	this->nomFichier = nomFichier;
+}
+
+void Tirage::save() const
+{
+	FlatTirage ft = getFlat();
+	FILE *fd = fopen(nomFichier.c_str(), "wb+");
+
+	int res = fwrite(&ft,sizeof(FlatTirage), 1, fd);
+
+	fclose(fd);
+
+
 }

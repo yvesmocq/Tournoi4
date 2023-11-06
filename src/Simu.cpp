@@ -24,9 +24,11 @@ Simu *Simu::getInstance(int nbPers)
 	return Simu::instance;
 }
 
-Simu::Simu(int nbPers): nbPers(nbPers), instTirage(Tirage::getInstance()) {
+Simu::Simu(int nbPers): nbPers(nbPers)  {
 
 	Tools *instTools=Tools::getInstance();
+
+	Tirage *instTirage(Tirage::getInstance());
 
 	Personne::resetSerieId();
 
@@ -58,7 +60,6 @@ Simu::Simu(int nbPers): nbPers(nbPers), instTirage(Tirage::getInstance()) {
 
 Simu::~Simu()
 {
-	delete instTirage;
 	Simu::instance = nullptr;
 }
 
@@ -109,6 +110,8 @@ void Simu::calResult(Match *pm)
 
 bool Simu::simule( int nbtour, bool fl2 )
 {
+	Tirage *instTirage(Tirage::getInstance());
+
 	for( int i=0; i < nbtour ; i++)
 	{
 //		cout <<"trace simule i="<<i<<endl;

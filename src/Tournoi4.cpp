@@ -14,6 +14,7 @@ using namespace std;
 #include "Match.h"
 #include "Tirage.h"
 #include "Simu.h"
+#include "Ihm.h"
 
 
 
@@ -57,10 +58,11 @@ bool test_all()
 
 int main() {
 	// bool flag_test=false;
-	bool flag_test=true;
+	bool flag_test=false;
 
 	if ( flag_test )
 	{
+		cout <<"sizeok(FlatTirage)="<<sizeof(FlatTirage)<<endl;
 		if ( !test_all())
 			cout<<"Non OK!!!"<<endl;
 		else
@@ -68,18 +70,22 @@ int main() {
 	}
 	else
 	{
-		cout << "trace1" <<endl;
-		Simu *simu=Simu::getInstance(16);
-		cout << "trace2" <<endl;
+		Ihm *p_ihm = Ihm::getInstance();
 
-		for ( int i = 0 ; i < 4 ; i++)
-		{
-			simu->simule(1, i >= 3);
-			cout << "trace3" <<endl;
+		p_ihm->lancement();
 
-			simu->affResult();
-			cout << "trace4" <<endl;
-		}
+//		cout << "trace1" <<endl;
+//		Simu *simu=Simu::getInstance(16);
+//		cout << "trace2" <<endl;
+//
+//		for ( int i = 0 ; i < 4 ; i++)
+//		{
+//			simu->simule(1, i >= 3);
+//			cout << "trace3" <<endl;
+//
+//			simu->affResult();
+//			cout << "trace4" <<endl;
+//		}
 
 	}
 

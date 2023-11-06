@@ -9,6 +9,7 @@
 #define IHM_H_
 using namespace std;
 #include <string>
+#include <vector>
 
 class Ihm final {
 	Ihm();
@@ -26,6 +27,11 @@ public:
 	void menuPrincipal();
 
 	int getChoixNum(string phrase, int from, int to);
+	int getChoix( vector<string> lib) const;
+
+	void gesPersonne();
+	void tournoi();
+
 };
 
 #endif /* IHM_H_ */

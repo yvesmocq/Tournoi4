@@ -21,9 +21,10 @@ class Match;
 
 struct FlatPers
 {
-	int id;
+	bool isValid;
 	bool present;
-	char filler[3];
+	char filler[2];
+	int id;
 	array<char,40> name;
 };
 
@@ -67,6 +68,7 @@ public:
 	Personne();
 	Personne( const string &n);
 	Personne(int id);
+	Personne( const FlatPers &fp );
 	~Personne();
 
 
@@ -81,7 +83,7 @@ public:
 	const string & getNameSimple() const;
 
 	const list<Match *> &getMatches() const;
-	void addMatch(Match *m);
+	int addMatch(Match *m);
 	string toStr() const;
 	string toStrName() const;
 	string mkLigne() const;

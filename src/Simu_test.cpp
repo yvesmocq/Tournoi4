@@ -40,10 +40,15 @@ bool test_prob_gain()
 bool verif_tour(int n)
 {
 	Tirage *pt=Tirage::getInstance();
+	Tools *tools = Tools::getInstance();
 	const list<Match *> & lm = pt->getTour(n);
 	vector<int> vres(pt->getAllPersonnes().size());
 	for ( const Match *pm:lm)
 	{
+		if ( pm->getNumTour() != n )
+		{
+			cout <<"Erreur numTour="<<pm->getNumTour()<<" n="<<n<<endl;
+		}
 		array<int,4> pid=pm->getPersId();
 		if ( pid[0] != 0 )
 		{
@@ -89,6 +94,8 @@ bool verif_tour(int n)
 		if ( !vres[i])
 		{
 			cout <<"erreur i="<<i<<" non present" << endl;
+			cout <<"vres="<< tools->to_string(vres)<<endl;
+			cout <<"lm.size()="<<lm.size()<<endl;
 			return false;
 
 		}
@@ -218,34 +225,53 @@ void verif_borne(int nbpers, int flagcout)
 }
 bool test_simubig()
 {
+	Tools *tools=Tools::getInstance();
 	for ( int i = 8 ; i <= 80 ; i++)
 	{
 
 		// cout << "verf_borne i="<<i<<endl;
-		verif_borne( i , false);
+		verif_borne( i , true);
 
-		Tirage *pt = Tirage::getInstance();
-		for ( int j = 0 ; j < pt->getNbTours() ; j++ )
+		FlatTirage ft[2];
+
+		for ( int k=0; k < 2 ; k++ )
 		{
-			if ( !verif_tour(j) )
+
+			Tirage *pt = k == 0 ? Tirage::getInstance() : Tirage::getInstance(ft[0]);
+			for ( int j = 0 ; j < pt->getNbTours() ; j++ )
 			{
-				cout << "Erreur verif_tour nbpers="<<i<<" tour="<<j<<endl;
+				if ( !verif_tour(j) )
+				{
+					cout << "Erreur verif_tour nbpers="<<i<<" tour="<<j<<" k="<<k<<endl;
+					return false;
+				}
+			}
+			if ( !verif_tour_3() )
+			{
+				cout << "Erreur verif_tour_3 nbpers="<<i<<" k="<<k<<endl;
 				return false;
 			}
+			ft[k] = pt->getFlat();
+			delete pt;
+
+	//		Simu *simu=Simu::getInstance(i);
+	//		simu->affResult();
+
+	//		if ( !test_simu(i) )
+	//		{
+	//			cout <<"Erreur test_simu nbpers="<<i<<endl;
+	//			return false;
+	//		}
 		}
-		if ( !verif_tour_3() )
+
+		if ( memcmp(&ft[0],&ft[1], sizeof(FlatTirage)) != 0 )
 		{
-			cout << "Erreur verif_tour_3 nbpers="<<i<<endl;
+			cout <<" Erreur comparaison FlatTirage"<<endl;
+			cout << " à l'indice : "<<tools->cmp((const char *)&ft[0],(const char *)&ft[1], sizeof(FlatTirage)) <<endl;
 			return false;
 		}
-//		Simu *simu=Simu::getInstance(i);
-//		simu->affResult();
 
-//		if ( !test_simu(i) )
-//		{
-//			cout <<"Erreur test_simu nbpers="<<i<<endl;
-//			return false;
-//		}
+
 	}
 	return true;
 }

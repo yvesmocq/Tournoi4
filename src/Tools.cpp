@@ -93,6 +93,15 @@ string Tools::toSimple( string from ) const
 
 	return string(ptrout);
 }
+int Tools::cmp( const char *p1, const char *p2, size_t s) const
+{
+	for ( size_t i=0 ; i < s ; i++ )
+	{
+		if( p1[i] != p2[i] )
+			return i;
+	}
+	return s;
+}
 
 
 

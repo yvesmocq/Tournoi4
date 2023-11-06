@@ -7,6 +7,7 @@
 
 #include "Match.h"
 
+
 // la creation du match ne veut pas dire sa validation
 // on ne touche pas à Personne lors de cette creation
 Match::Match(array<Personne *,4> personnes ):
@@ -194,4 +195,19 @@ void Match::setNumTour(int numTour)
 {
 	this->numTour = numTour;
 }
+int Match::getNumTour() const
+{
+	return numTour;
+}
+FlatMatch Match::getFlat() const
+{
+	FlatMatch fm={};
+	fm.isValid = true;
+	fm.resultInit = this->resultInit;
+	fm.pers = this->pers;
+	fm.result = this->result;
+	return fm;
+}
+
+
 

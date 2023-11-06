@@ -14,6 +14,16 @@ using namespace std;
 #include "Personne.h"
 
 class Personne;
+
+struct FlatMatch
+{
+	bool isValid;
+	bool resultInit;
+	char filler[6];
+	array<int,4> pers;
+	array<int,4> result;
+};
+
 class Match {
 	array<int,4> pers;
 	array<int,4> result;
@@ -26,6 +36,7 @@ class Match {
 
 public:
 	Match(array<Personne *,4> personnes );
+	Match(const FlatMatch &fm);
 	~Match();
 	bool isIn(const Personne *p) const;
 	int getScore(const Personne *p, int *diff=nullptr) const;
@@ -44,7 +55,9 @@ public:
 	bool istittable() const;
 
 	void setNumTour( int numTour );
+	int getNumTour() const;
 
+	FlatMatch getFlat() const;
 
 };
 

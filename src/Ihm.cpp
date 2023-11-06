@@ -28,20 +28,60 @@ Ihm::~Ihm() {
 
 void Ihm::lancement()
 {
-	Tirage *pt=Tirage::getInstance();
 
-	const vector<Personne *> & allp=pt->getAllPersonnes();
+	vector<string> lib={"Gestion Personne", "Lancement Tournoi", "Sortie"};
 
-	vector<Personne *> liste(allp.begin()+1,allp.end());
+	bool flagcont=true;
 
-	Personne::sortnum(liste, Personne::PNameLess );
-
-	for ( Personne *p:liste )
+	while( flagcont )
 	{
-		cout << p->numName()<<endl;
+		switch( getChoix( lib ))
+		{
+		case 0 : gesPersonne(); break;
+		case 1 : tournoi(); break;
+		case 2 : Tirage::getInstance()->save();
+			flagcont = false; break;
+		}
 	}
 
 
+}
+
+void Ihm::gesPersonne()
+{
+	cout <<"GesPersonne"<<endl;
+}
+void Ihm::tournoi()
+{
+	cout <<"tournoi"<<endl;
+}
+
+int Ihm::getChoix( vector<string> lib) const
+{
+	stringstream ss;
+	char str[4]="A. ";
+	for( int i = 0 ; i < (int)lib.size() ; i++)
+	{
+		str[0] = 'A' + i;
+		cout << string(str) << lib[i] << endl;
+	}
+	int res = -1;
+	char str2[4] = "A]";
+	char c_borne = 'A' +(lib.size()-1);
+	str2[0] = c_borne;
+	char cb_min = c_borne + 'a'-'A';
+	string reponse;
+	do
+	{
+		cout << "Votre choix [A-"<<string(str2)<<": ";
+		getline(cin, reponse);
+		char c=reponse.c_str()[0];
+		if ( c >= 'A' && c <= c_borne )
+			res = c-'A';
+		if ( c >= 'a' && c <= cb_min )
+			res = c-'a';
+	}while( res < 0);
+	return res;
 }
 
 

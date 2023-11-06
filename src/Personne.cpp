@@ -23,14 +23,20 @@ void Personne::resetSerieId(){
 	serie_id_pers = 1;
 }
 
-Personne::Personne():id_pers(serie_id_pers) {
+Personne::Personne():id_pers(serie_id_pers), present(true) {
 	serie_id_pers++;
 }
-Personne::Personne(const string &n):name(n),nameSimple(Tools::getInstance()->toSimple(n)+name), id_pers(serie_id_pers) {
+Personne::Personne(const string &n):id_pers(serie_id_pers), present(true) {
+	setName(n);
 	serie_id_pers++;
 }
 Personne::Personne(int id):id_pers(id) {
 
+}
+Personne::Personne( const FlatPers &fp ): id_pers(fp.id), present(fp.present)
+{
+	setName(string(fp.name.data()));
+	serie_id_pers = id_pers+1;
 }
 
 
@@ -94,9 +100,11 @@ const list<Match *> & Personne::getMatches() const
 {
 	return matches;
 }
-void Personne::addMatch(Match *m)
+int Personne::addMatch(Match *m)
 {
 	this->matches.push_back(m);
+	this->calculResult();
+	return matches.size();
 }
 void Personne::setName(const string & name)
 {
@@ -202,10 +210,10 @@ bool Personne::isPresent() const
 FlatPers Personne::getFlat() const
 {
 	FlatPers fp={};
+	fp.isValid = true;
+	fp.present = this->present;
 	fp.id = id_pers;
 	strncpy(fp.name.data(), name.c_str(), 39);
-
-
 	return fp;
 
 }

@@ -18,7 +18,6 @@ using namespace std;
 class Simu final {
 	static Simu *instance;
 	const int nbPers;
-	Tirage *instTirage;
 
 	Simu(int nb);
 
@@ -37,14 +36,14 @@ public:
 
 	static Simu *getInstance(int nb=52);
 
-	void affResult() { instTirage->affResult(); }
+	void affResult() { Tirage::getInstance()->affResult(); }
 	int getNbTentatives() const
 	{
-		return instTirage->getNbTentatives();
+		return Tirage::getInstance()->getNbTentatives();
 	}
 	int getMaxIndice() const
 	{
-		return instTirage->getMaxIndice();
+		return Tirage::getInstance()->getMaxIndice();
 	}
 
 	~Simu();

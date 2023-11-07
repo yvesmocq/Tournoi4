@@ -12,6 +12,7 @@
 #include <vector>
 #include <list>
 #include <set>
+#include "Tools.h"
 #include "Mask.h"
 #include "Personne.h"
 #include "Match.h"
@@ -27,7 +28,6 @@ class Tirage {
 private:
 	PartitionInt partInt;
 	Tirage();
-	Tirage(const FlatTirage &ft);
 
 	static Tirage *instance;
 
@@ -40,6 +40,8 @@ private:
 	vector<Personne *> allPersonnes;
 	list<Match *> allMatches;
 	vector<list<Match*>> allTours;
+
+	int nbPersonnes;
 
 	array<Personne *, 4> convArray(array<int,4> arr) const;
 
@@ -54,12 +56,16 @@ public:
 	static Tirage *getInstance();
 	static Tirage * getInstance(const FlatTirage &ft);
 	static Tirage * getInstance( const string &nomFichier);
+	static bool isInstance();
+
+	void initInstance();
+	void initInstance(const FlatTirage &ft);
 
 	~Tirage();
 	int id_match=0;
 
 	bool makeTirage(bool fl2=false);
-
+	void deletePersonne(Personne *p);
 	void addPersonne(Personne *p);
 	int addMatch(Match *m);
 	void affResult();
@@ -76,7 +82,11 @@ public:
 	FlatTirage getFlat() const;
 
 
+	void getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct );
+
 	void setNomFichier( const string &nomFichier );
+
+	int getNbPersonnes() const;
 
 	void save() const;
 

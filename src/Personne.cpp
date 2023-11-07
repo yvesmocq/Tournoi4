@@ -7,7 +7,9 @@
 
 #include "Personne.h"
 #include "Tools.h"
+#include "Tirage.h"
 #include <cstring>
+#include <cassert>
 
 // static
 int Personne::serie_id_pers=1;
@@ -20,28 +22,69 @@ Personne::P_NameLess Personne::PNameLess=P_NameLess();
 
 // static
 void Personne::resetSerieId(){
-	serie_id_pers = 1;
+	serie_id_pers = 0;
+	Personne::nextIdPers();
 }
 
-Personne::Personne():id_pers(serie_id_pers), present(true) {
-	serie_id_pers++;
+// static public pour test
+int Personne::getSerieId()
+{
+	return serie_id_pers;
 }
-Personne::Personne(const string &n):id_pers(serie_id_pers), present(true) {
+
+// static function
+void Personne::nextIdPers()
+{
+	if ( Tirage::isInstance() )
+	{
+		const vector<Personne *> &va = Tirage::getInstance()->getAllPersonnes();
+		for ( int i = serie_id_pers+1 ; i < (int)va.size() ; i++ )
+		{
+			if ( va[i] == nullptr)
+			{
+				serie_id_pers = i;
+				break;
+			}
+		}
+	}
+	else
+	{
+		serie_id_pers++;
+	}
+
+}
+
+// static
+int Personne::getIdPersNext()
+{
+	int ret = serie_id_pers;
+	Personne::nextIdPers();
+	return ret;
+}
+
+Personne::Personne():present(true), id_pers(Personne::getIdPersNext()) {
+}
+Personne::Personne(const string &n):present(true), id_pers(Personne::getIdPersNext()) {
 	setName(n);
-	serie_id_pers++;
 }
 Personne::Personne(int id):id_pers(id) {
+	assert( id_pers == 0 && "forçage de l'identifiant d'un objet Personne différent de zéro" );
 
 }
-Personne::Personne( const FlatPers &fp ): id_pers(fp.id), present(fp.present)
+Personne::Personne( const FlatPers &fp ): present(fp.present), id_pers(fp.id)
 {
 	setName(string(fp.name.data()));
-	serie_id_pers = id_pers+1;
+	Personne::nextIdPers();
 }
 
 
 Personne::~Personne()
-{}
+{
+	if ( id_pers < serie_id_pers )
+	{
+		serie_id_pers = id_pers;
+	}
+}
 
 
 int Personne::calculResult()
@@ -217,3 +260,6 @@ FlatPers Personne::getFlat() const
 	return fp;
 
 }
+
+
+

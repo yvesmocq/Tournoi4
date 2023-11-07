@@ -25,13 +25,13 @@ struct FlatMatch
 };
 
 class Match {
+	bool resultInit;
 	array<int,4> pers;
 	array<int,4> result;
 	array<int,4> score; //score de chacun avant le match;
 	array<int,4> diff;
 
 	int numTour;
-	bool resultInit;
 	array<Personne*,4> personnes;
 
 public:

@@ -31,6 +31,10 @@ struct FlatPers
 class Personne {
 private:
 	static int serie_id_pers;
+	static void nextIdPers();
+	static int getIdPersNext();
+
+
 
 	string name;
 	string nameSimple;
@@ -63,7 +67,13 @@ private:
 
 
 public:
+
 	const int id_pers;
+
+	static int getSerieId();
+
+
+
 
 	Personne();
 	Personne( const string &n);
@@ -107,6 +117,7 @@ public:
 	static void sortnum( vector<Personne *> & v, function<bool(Personne *,Personne *)> fct);
 
 	FlatPers getFlat() const;
+
 };
 
 

@@ -30,12 +30,9 @@ Simu::Simu(int nbPers): nbPers(nbPers)  {
 
 	Tirage *instTirage(Tirage::getInstance());
 
-	Personne::resetSerieId();
-
 	struct PSim ps;
-	ps.p = new Personne(0);
+	ps.p = instTirage->getAllPersonnes()[0];
 
-	instTirage->addPersonne(ps.p);
 
 	allPS.push_back(ps);
 
@@ -114,15 +111,15 @@ bool Simu::simule( int nbtour, bool fl2 )
 
 	for( int i=0; i < nbtour ; i++)
 	{
-//		cout <<"trace simule i="<<i<<endl;
+		cerr <<"trace simule i="<<i<<" nbtour="<<nbtour<<endl;
 
 		if ( !instTirage->makeTirage(fl2) )
 		{
-//			cout << "Erreur tirage!!!"<<endl;
+			cerr << "Erreur tirage!!!"<<endl;
 			return false;
 		}
 
-//		cout <<"trace simule1 i="<<i<<endl;
+		cerr <<"trace simule1 i="<<i<<endl;
 
 		for( Match * m:instTirage->getLastTour() )
 		{

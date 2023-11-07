@@ -10,6 +10,7 @@
 using namespace std;
 #include <string>
 #include <vector>
+#include "Personne.h"
 
 class Ihm final {
 	Ihm();
@@ -31,6 +32,8 @@ public:
 
 	void gesPersonne();
 	void tournoi();
+
+	void lister(const vector<Personne *> &s) const;
 
 };
 

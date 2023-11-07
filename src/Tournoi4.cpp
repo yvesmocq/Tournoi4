@@ -58,7 +58,7 @@ bool test_all()
 
 int main() {
 	// bool flag_test=false;
-	bool flag_test=false;
+	bool flag_test=true;
 
 	if ( flag_test )
 	{

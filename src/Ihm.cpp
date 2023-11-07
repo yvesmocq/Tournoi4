@@ -49,8 +49,33 @@ void Ihm::lancement()
 
 void Ihm::gesPersonne()
 {
-	cout <<"GesPersonne"<<endl;
+	vector<string> lib={"Ajout d'une personne", "Modification d'une personne", "Suppression d'une personne", "Retour au menu principal"};
+	Tirage *pt = Tirage::getInstance();
+
+	bool flagcont=true;
+
+	vector<Personne *> vp;
+	while( flagcont )
+	{
+		pt->getPersSortNum(vp , Personne::PNameLess);
+		lister(vp);
+	}
+
 }
+
+
+void Ihm::lister(const vector<Personne *> & s) const
+{
+	int n=1;
+	for ( Personne *p : s)
+	{
+		cout << n <<". "<<p->getName() <<endl;
+		n++;
+	}
+}
+
+
+
 void Ihm::tournoi()
 {
 	cout <<"tournoi"<<endl;

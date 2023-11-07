@@ -21,35 +21,11 @@ using namespace std;
 //
 Tirage * Tirage::instance=nullptr;
 
-Tirage::Tirage():maxIndice(0),nbTentatives(0) {
+Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), nbPersonnes(0), maxIndice(0),nbTentatives(0)  {
 	Personne::resetSerieId();
-
 }
-Tirage::Tirage(const FlatTirage &ft):maxIndice(0),nbTentatives(0)
-{
-	for( const FlatPers & fp:ft.allPers)
-	{
-		if ( fp.isValid)
-		{
-			Personne *p = new Personne(fp);
-			allPersonnes.push_back(p);
-		}
-	}
-	for( const FlatMatch &fm:ft.allMatches )
-	{
-		if ( fm.isValid)
-		{
-			Match *m = new Match(convArray(fm.pers));
-			if ( fm.resultInit )
-			{
-				m->setResult(fm.result);
-			}
-			addMatch(m);
-		}
 
-	}
 
-}
 
 Tirage::~Tirage() {
 	for( auto p: allPersonnes)
@@ -68,9 +44,43 @@ Tirage * Tirage::getInstance()
 	if ( instance == nullptr )
 	{
 		instance = new Tirage();
+		instance->initInstance();
 	}
 	return instance;
 }
+void Tirage::initInstance()
+{
+	allPersonnes[0] = new Personne(0);
+}
+void Tirage::initInstance( const FlatTirage &ft)
+{
+	initInstance();
+	for( const FlatPers & fp:ft.allPers)
+	{
+		if ( fp.isValid )
+		{
+			Personne *p = new Personne(fp);
+			allPersonnes[p->id_pers] = p;
+			nbPersonnes++;
+		}
+	}
+	nbPersonnes--; // pour ne pas prendre en compte l'id 0
+	for( const FlatMatch &fm:ft.allMatches )
+	{
+		if ( fm.isValid)
+		{
+			Match *m = new Match(convArray(fm.pers));
+			if ( fm.resultInit )
+			{
+				m->setResult(fm.result);
+			}
+			addMatch(m);
+		}
+
+	}
+
+}
+
 // static function
 Tirage * Tirage::getInstance(const FlatTirage &ft)
 {
@@ -78,10 +88,14 @@ Tirage * Tirage::getInstance(const FlatTirage &ft)
 	{
 		delete instance;
 	}
-	instance = new Tirage(ft);
+	instance = new Tirage();
+
+	instance->initInstance(ft);
+	Personne::resetSerieId();
+
 	return instance;
 }
-
+// static function
 Tirage *Tirage::getInstance( const string & nomFichier)
 {
 	FILE *fd=fopen(nomFichier.c_str(),"rb");
@@ -104,6 +118,14 @@ Tirage *Tirage::getInstance( const string & nomFichier)
 
 	pt->setNomFichier( nomFichier );
 
+	return pt;
+
+}
+
+// static function
+bool Tirage::isInstance()
+{
+	return Tirage::instance != nullptr;
 }
 
 
@@ -116,6 +138,7 @@ Match *Tirage::getMatch(array<int,4> ap) const
 	}
 	return new Match(pp);
 }
+
 
 
 bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, list<Match*> &newmatch, int *mi, bool fl2)
@@ -276,27 +299,47 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, list<
 
 bool Tirage::makeTirage(bool fl2)
 {
-
+//cerr << "mttrace1"<<endl;
 	bool flagok = false;
 	const bool flagcout=false;
 
 	list<Match *> newmatch;
 
-	for( int i= 0 ;  !flagok && i < 100 ; i++ )
+	for( int i= 0 ;  !flagok && i < 10 ; i++ )
 	{
 
-		vector<Personne *> vp(allPersonnes.begin()+1, allPersonnes.end());
+		cerr << "mttrace2"<<endl;
+		vector<Personne *> vp;
 
 		for ( Personne * p : allPersonnes)
 		{
-			p->calculNote();
-			p->mkMaskMatch();
+			if ( p != nullptr  && p->id_pers != 0 )
+			{
+
+				p->calculNote();
+				p->mkMaskMatch();
+				vp.push_back(p);
+				cerr<<" id_pers="<<p->id_pers<<endl;
+			}
 		}
 
 		sort(vp.begin(), vp.end(), Personne::PersonneLess);
 
+if ( false )
+{
+		for ( Personne * p : allPersonnes)
+		{
+			if ( p != nullptr )
+			{
+				p->calculNote();
+				p->mkMaskMatch();
+			}
+		}
 
+		getPersSortNum(vp,Personne::PersonneLess );
+}
 
+		cerr << "mttrace3"<<endl;
 
 
 		maxIndice=0;
@@ -395,30 +438,46 @@ bool Tirage::isGood3(array<int,4> arr, int nb ) const
 
 void Tirage::addPersonne(Personne *p)
 {
-	allPersonnes.push_back(p);
+	allPersonnes[p->id_pers] = p;
+	nbPersonnes++;
+}
+void Tirage::deletePersonne(Personne *p)
+{
+	if ( p->getMatches().size() != 0 )
+	{
+		cerr << "On ne peut supprimer une personne dont il existe des matches"<<endl;
+	}
+	else
+	{
+		allPersonnes[p->id_pers] = nullptr;
+		delete p;
+		nbPersonnes--;
+	}
 }
 
 
 
 void Tirage::affResult()
 {
-	vector<Personne *> vp(allPersonnes.begin(), allPersonnes.end());
+	vector<Personne *> vp;
 
 	vector<int> newId(vp.size());
 
 	for ( Personne * p : allPersonnes)
 	{
-		p->calculNote();
+		if ( p != nullptr ) p->calculNote();
 	}
 
-	sort(vp.begin(), vp.end(), Personne::PersonneMore);
+	getPersSortNum(vp,Personne::PersonneMore);
 
-	vp.pop_back();
-
-	for( int i = 0 ; i < (int)vp.size() ; i++ )
-	{
-		vp[i]->setId_prov(i);
-	}
+//	sort(vp.begin(), vp.end(), Personne::PersonneMore );
+//
+//	vp.pop_back();
+//
+//	for( int i = 0 ; i < (int)vp.size() ; i++ )
+//	{
+//		vp[i]->setId_prov(i);
+//	}
 
 
 	for ( Personne *p:vp)
@@ -459,7 +518,11 @@ FlatTirage Tirage::getFlat() const
 	int i_pers=0;
 	for ( Personne *p : allPersonnes )
 	{
-		ft.allPers[i_pers++] = p->getFlat();
+		if ( p != nullptr )
+		{
+			ft.allPers[i_pers] = p->getFlat();
+		}
+		i_pers++;
 	}
 	int i_match=0;
 	for ( Match *m : allMatches )
@@ -488,9 +551,31 @@ void Tirage::save() const
 	FlatTirage ft = getFlat();
 	FILE *fd = fopen(nomFichier.c_str(), "wb+");
 
-	int res = fwrite(&ft,sizeof(FlatTirage), 1, fd);
+	fwrite(&ft,sizeof(FlatTirage), 1, fd);
 
 	fclose(fd);
 
 
 }
+void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct )
+{
+	result.clear();
+	for ( int i = 1 ; i < (int)allPersonnes.size() ; i++ )
+	{
+		if ( allPersonnes[i] != nullptr )
+		{
+			result.push_back(allPersonnes[i]);
+		}
+	}
+	sort(result.begin(),result.end(),fct);
+	for ( int i = 0 ; i < (int)result.size() ; i++)
+	{
+		result[i]->setId_prov(i);
+	}
+
+}
+int Tirage::getNbPersonnes() const
+{
+	return nbPersonnes;
+}
+

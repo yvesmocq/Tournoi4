@@ -31,6 +31,12 @@ public:
 	int getChoix( vector<string> lib) const;
 
 	void gesPersonne();
+	void ajoutPersonne();
+	void modifPersonne();
+	void suppPersonne();
+	bool confirm(const string &lib );
+	void retCont();
+	void getLib(const string & out, string &result);
 	void tournoi();
 
 	void lister(const vector<Personne *> &s) const;

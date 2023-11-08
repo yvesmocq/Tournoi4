@@ -111,15 +111,15 @@ bool Simu::simule( int nbtour, bool fl2 )
 
 	for( int i=0; i < nbtour ; i++)
 	{
-		cerr <<"trace simule i="<<i<<" nbtour="<<nbtour<<endl;
+//		cerr <<"trace simule i="<<i<<" nbtour="<<nbtour<<endl;
 
 		if ( !instTirage->makeTirage(fl2) )
 		{
-			cerr << "Erreur tirage!!!"<<endl;
+//			cerr << "Erreur tirage!!!"<<endl;
 			return false;
 		}
 
-		cerr <<"trace simule1 i="<<i<<endl;
+//		cerr <<"trace simule1 i="<<i<<endl;
 
 		for( Match * m:instTirage->getLastTour() )
 		{

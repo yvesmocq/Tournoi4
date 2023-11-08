@@ -58,7 +58,7 @@ bool test_all()
 
 int main() {
 	// bool flag_test=false;
-	bool flag_test=true;
+	bool flag_test=false;
 
 	if ( flag_test )
 	{
@@ -71,7 +71,9 @@ int main() {
 	else
 	{
 		Ihm *p_ihm = Ihm::getInstance();
-
+cerr << "trace1"<<endl;
+		Tirage::getInstance("svt4.dt4");
+		cerr << "trace2"<<endl;
 		p_ihm->lancement();
 
 //		cout << "trace1" <<endl;

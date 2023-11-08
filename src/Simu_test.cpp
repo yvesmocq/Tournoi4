@@ -44,7 +44,7 @@ bool verif_tour(int n)
 	const list<Match *> & lm = pt->getTour(n);
 	vector<int> vres(pt->getNbPersonnes()+1);
 
-	cout << "getNbPersonnes()="<<pt->getNbPersonnes()<<endl;
+//	cout << "getNbPersonnes()="<<pt->getNbPersonnes()<<endl;
 	for ( const Match *pm:lm)
 	{
 		if ( pm->getNumTour() != n )
@@ -190,14 +190,14 @@ bool test_simu(int nbpers)
 }
 void verif_borne(int nbpers, int flagcout)
 {
-	cerr <<"trace3"<<endl;
+//	cerr <<"trace3"<<endl;
 
 	Simu *simu=Simu::getInstance(nbpers);
-	cerr <<"trace4"<<endl;
+//	cerr <<"trace4"<<endl;
 
-	const bool flagoutplus=true;
+	const bool flagoutplus=false;
 
-	flagcout && cerr <<"nbpers="<<nbpers<<" i= ";
+	flagcout && cout <<"nbpers="<<nbpers<<" i= ";
 
 	bool flag=false;
 
@@ -212,7 +212,7 @@ void verif_borne(int nbpers, int flagcout)
 			else
 			{
 				flag = true;
-				flagcout && cerr << i <<" , ";
+				flagcout && cout << i <<" , ";
 			}
 		}
 		else
@@ -234,15 +234,15 @@ void verif_borne(int nbpers, int flagcout)
 }
 bool test_simubig()
 {
-	cerr <<"trace1"<<endl;
+//	cerr <<"trace1"<<endl;
 
 	Tools *tools=Tools::getInstance();
-	cerr <<"trace2"<<endl;
+//	cerr <<"trace2"<<endl;
 
 	for ( int i = 8 ; i <= 80 ; i++)
 	{
 
-		cerr << "verf_borne i="<<i<<endl;
+//		cerr << "verf_borne i="<<i<<endl;
 		verif_borne( i , true);
 		if ( Tirage::getInstance()->getNbPersonnes() != i)
 		{
@@ -255,14 +255,14 @@ bool test_simubig()
 		for ( int k=0; k < 2 ; k++ )
 		{
 
-			cerr <<"tt1"<<endl;
+	//		cerr <<"tt1"<<endl;
 			Tirage *pt = k == 0 ? Tirage::getInstance() : Tirage::getInstance(ft[0]);
 			if ( Tirage::getInstance()->getNbPersonnes() != i)
 				{
 					cout <<"Erreur NbPersonnes k="<<k<<endl;
 					return false;
 				}
-				cerr <<"tt2"<<endl;
+	//			cerr <<"tt2"<<endl;
 			for ( int j = 0 ; j < pt->getNbTours() ; j++ )
 			{
 				if ( !verif_tour(j) )
@@ -271,17 +271,17 @@ bool test_simubig()
 					return false;
 				}
 			}
-			cerr <<"tt3"<<endl;
+//			cerr <<"tt3"<<endl;
 			if ( !verif_tour_3() )
 			{
 				cout << "Erreur verif_tour_3 nbpers="<<i<<" k="<<k<<endl;
 				return false;
 			}
-			cerr <<"tt31"<<endl;
+//			cerr <<"tt31"<<endl;
 			ft[k] = pt->getFlat();
-			cerr <<"tt4"<<endl;
+//			cerr <<"tt4"<<endl;
 			delete pt;
-			cerr <<"tt5"<<endl;
+//			cerr <<"tt5"<<endl;
 
 	//		Simu *simu=Simu::getInstance(i);
 	//		simu->affResult();
@@ -291,7 +291,7 @@ bool test_simubig()
 	//			cout <<"Erreur test_simu nbpers="<<i<<endl;
 	//			return false;
 	//		}
-			cerr <<"trace10 k="<<k<<endl;
+//			cerr <<"trace10 k="<<k<<endl;
 		}
 
 		if ( memcmp(&ft[0],&ft[1], sizeof(FlatTirage)) != 0 )
@@ -306,7 +306,7 @@ bool test_simubig()
 }
 bool test_simu()
 {
-	cerr <<"trace1"<<endl;
+//	cerr <<"trace1"<<endl;
 	return test_simubig();
 }
 

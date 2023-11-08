@@ -99,22 +99,29 @@ Tirage * Tirage::getInstance(const FlatTirage &ft)
 Tirage *Tirage::getInstance( const string & nomFichier)
 {
 	FILE *fd=fopen(nomFichier.c_str(),"rb");
+	Tirage *pt=nullptr;
+	FlatTirage ft;
 	if ( fd == NULL )
 	{
 		cout <<"Il n'y a pas de fichier de sauvegarde on repart à zéro"<<endl;
-		return getInstance();
+		pt =Tirage::getInstance();
 	}
-	FlatTirage ft;
-	int res = fread(&ft, sizeof(FlatTirage), 1, fd);
-	if ( res != 1 )
+	if ( pt == nullptr )
 	{
-		cout << "problème lecture fichier"<<endl;
-		fclose(fd);
-		return getInstance();
-	}
-	fclose(fd);
 
-	Tirage *pt =getInstance(ft);
+		int res = fread(&ft, sizeof(FlatTirage), 1, fd);
+		if ( res != 1 )
+		{
+			cout << "Problème lecture fichier on repart à zéro"<<endl;
+			pt =  getInstance();
+		}
+		fclose(fd);
+	}
+
+	if ( pt == nullptr )
+	{
+		pt =Tirage::getInstance(ft);
+	}
 
 	pt->setNomFichier( nomFichier );
 
@@ -308,25 +315,23 @@ bool Tirage::makeTirage(bool fl2)
 	for( int i= 0 ;  !flagok && i < 10 ; i++ )
 	{
 
-		cerr << "mttrace2"<<endl;
+//		cerr << "mttrace2"<<endl;
 		vector<Personne *> vp;
 
-		for ( Personne * p : allPersonnes)
-		{
-			if ( p != nullptr  && p->id_pers != 0 )
-			{
+//		for ( Personne * p : allPersonnes)
+//		{
+//			if ( p != nullptr  && p->id_pers != 0 )
+//			{
+//
+//				p->calculNote();
+//				p->mkMaskMatch();
+//				vp.push_back(p);
+//				cerr<<" id_pers="<<p->id_pers<<endl;
+//			}
+//		}
+//
+//		sort(vp.begin(), vp.end(), Personne::PersonneLess);
 
-				p->calculNote();
-				p->mkMaskMatch();
-				vp.push_back(p);
-				cerr<<" id_pers="<<p->id_pers<<endl;
-			}
-		}
-
-		sort(vp.begin(), vp.end(), Personne::PersonneLess);
-
-if ( false )
-{
 		for ( Personne * p : allPersonnes)
 		{
 			if ( p != nullptr )
@@ -337,9 +342,9 @@ if ( false )
 		}
 
 		getPersSortNum(vp,Personne::PersonneLess );
-}
 
-		cerr << "mttrace3"<<endl;
+
+//		cerr << "mttrace3"<<endl;
 
 
 		maxIndice=0;

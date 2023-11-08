@@ -59,10 +59,62 @@ void Ihm::gesPersonne()
 	{
 		pt->getPersSortNum(vp , Personne::PNameLess);
 		lister(vp);
+		switch( getChoix(lib) )
+		{
+		case 0 : ajoutPersonne(); break;
+		case 1 : modifPersonne(); break;
+		case 2 : suppPersonne(); break;
+		case 3 : flagcont = false; break;
+		default :
+			cout << "Erreur retour getChoix non prévu" <<endl;
+			exit(-1);
+		}
 	}
 
 }
+void Ihm::ajoutPersonne()
+{
+	string nom;
 
+		cout << "Ajout d'une personne" <<endl;
+		getLib("Nom : ", nom);
+		string libconf = "Confirmez vous l'ajout de la personne XXX"+nom+string("XXX");
+		if ( confirm(libconf) )
+		{
+			Tirage *pt = Tirage::getInstance();
+			pt->addPersonne(new Personne(nom));
+			pt->save();
+
+			cout << "la personne : XXX" <<nom<<"XXX a bien été ajoutée" <<endl;
+			retCont();
+		}
+
+}
+void Ihm::modifPersonne()
+{
+
+}
+void Ihm::suppPersonne()
+{
+
+}
+
+void Ihm::retCont()
+{
+	string rep;
+	cout << "Appuyez sur Entrée pour continuer ...";
+	getline(cin,rep);
+}
+
+bool Ihm::confirm(const string &lib )
+{
+
+	string rep;
+	cout << lib << " [N]/O : ";
+	getline(cin, rep);
+	return rep == "O" || rep == "o";
+
+}
 
 void Ihm::lister(const vector<Personne *> & s) const
 {
@@ -107,6 +159,12 @@ int Ihm::getChoix( vector<string> lib) const
 			res = c-'a';
 	}while( res < 0);
 	return res;
+}
+
+void Ihm::getLib(const string & out, string &result)
+{
+	cout << out ;
+	getline(cin, result);
 }
 
 

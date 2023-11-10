@@ -36,10 +36,10 @@ private:
 	bool isGood3(array<int,4> arr, int nb ) const;
 
 	Match * getMatch(array<int,4>) const;
-	bool rec_appar4(vector<Personne *> &vp, const array<int,3> & dec, list<Match*> &newmatch, int *mi, bool fl2);
+	bool rec_appar4(vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2);
 	vector<Personne *> allPersonnes;
 	list<Match *> allMatches;
-	vector<list<Match*>> allTours;
+	vector<vector<Match*>> allTours;
 
 	int nbPersonnes;
 
@@ -65,14 +65,16 @@ public:
 	int id_match=0;
 
 	bool makeTirage(bool fl2=false);
-	void deletePersonne(Personne *p);
+	void deletePersonne(const Personne *p);
 	void addPersonne(Personne *p);
 	int addMatch(Match *m);
 	void affResult();
-	const list<Match *> &getLastTour() const;
-	const list<Match *> &getTour(int n) const;
+	const vector<Match *> &getLastTour() const;
+	const vector<Match *> &getTour(int n) const;
 	const vector<Personne *> & getAllPersonnes() const;
 	const list<Match *> & getAllMatches() const;
+
+	int nbMatchNonSaisie() const;
 	int getNbTentatives() const;
 	int getMaxIndice() const;
 	int getNbTours() const

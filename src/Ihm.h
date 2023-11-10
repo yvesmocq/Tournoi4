@@ -32,14 +32,20 @@ public:
 
 	void gesPersonne();
 	void ajoutPersonne();
-	void modifPersonne();
-	void suppPersonne();
+	void modifPersonne(const vector<Personne *> & vp);
+	void suppPersonne(const vector<Personne *> & vp);
 	bool confirm(const string &lib );
+	string getStrTour(int n ) const;
 	void retCont();
 	void getLib(const string & out, string &result);
+	void saisieResultats();
+	void afficheMatches();
+	void affMatch( const Match *m) const;
+
 	void tournoi();
 
 	void lister(const vector<Personne *> &s) const;
+	string nameSize( const Personne *p) const;
 
 };
 

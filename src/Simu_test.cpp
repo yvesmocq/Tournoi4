@@ -41,7 +41,7 @@ bool verif_tour(int n)
 {
 	Tirage *pt=Tirage::getInstance();
 	Tools *tools = Tools::getInstance();
-	const list<Match *> & lm = pt->getTour(n);
+	const vector<Match *> & lm = pt->getTour(n);
 	vector<int> vres(pt->getNbPersonnes()+1);
 
 //	cout << "getNbPersonnes()="<<pt->getNbPersonnes()<<endl;

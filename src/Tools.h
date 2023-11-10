@@ -31,7 +31,7 @@ public:
 	static const size_t clubMax=16; // nombre maximum de club
 	static const size_t sizeMax=128; // nombre max de personne +1
 	static const size_t matchMax=(sizeMax/4)*20; // nombre maximum de clubs
-	static const size_t sizeNameMax=40; // taille max des noms
+	static const size_t sizeNameMax=32; // taille max des noms
 	static const size_t sizeNCMax=16; // talle max accronyme du club
 
 	static Tools * getInstance();

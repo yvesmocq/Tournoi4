@@ -109,9 +109,9 @@ public:
 
 	static void resetSerieId();
 
-	static P_Less PersonneLess;
-	static P_More PersonneMore;
-	static P_NameLess PNameLess;
+	static const P_Less PersonneLess;
+	static const P_More PersonneMore;
+	static const P_NameLess PNameLess;
 
 
 	static void sortnum( vector<Personne *> & v, function<bool(Personne *,Personne *)> fct);

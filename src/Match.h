@@ -34,6 +34,18 @@ class Match {
 	int numTour;
 	array<Personne*,4> personnes;
 
+
+	int sumScore() const
+	{
+		return score[0]+score[1]+score[2]+score[3];
+	}
+
+	struct M_More
+	    {
+	        bool operator()(Match *m1, Match *m2) const {
+	        	return m1->istittable() ? false : m2->istittable() ? true : m1->sumScore() > m2->sumScore();}
+	    };
+
 public:
 	Match(array<Personne *,4> personnes );
 	Match(const FlatMatch &fm);
@@ -58,6 +70,8 @@ public:
 	int getNumTour() const;
 
 	FlatMatch getFlat() const;
+
+	static const M_More MatchMore;
 
 };
 

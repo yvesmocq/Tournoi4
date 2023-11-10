@@ -148,7 +148,7 @@ Match *Tirage::getMatch(array<int,4> ap) const
 
 
 
-bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, list<Match*> &newmatch, int *mi, bool fl2)
+bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2)
 {
 	Tools *tools=Tools::getInstance();
 	const bool flagcout=false;
@@ -310,7 +310,7 @@ bool Tirage::makeTirage(bool fl2)
 	bool flagok = false;
 	const bool flagcout=false;
 
-	list<Match *> newmatch;
+	vector<Match *> newmatch;
 
 	for( int i= 0 ;  !flagok && i < 10 ; i++ )
 	{
@@ -380,6 +380,9 @@ bool Tirage::makeTirage(bool fl2)
 
 //	allTours.push_back(newmatch);
 // allTour est maintenant géré dans addMatch
+
+	sort(newmatch.begin(),newmatch.end(),Match::MatchMore);
+
 	for ( Match *m: newmatch)
 	{
 		addMatch(m);
@@ -404,7 +407,7 @@ int Tirage::addMatch(Match *m)
 	}
 	if ( rang > (int)allTours.size() )
 	{
-		allTours.push_back(list<Match *>());
+		allTours.push_back(vector<Match *>());
 	}
 	allTours.back().push_back(m);
 	allMatches.push_back(m);
@@ -446,7 +449,7 @@ void Tirage::addPersonne(Personne *p)
 	allPersonnes[p->id_pers] = p;
 	nbPersonnes++;
 }
-void Tirage::deletePersonne(Personne *p)
+void Tirage::deletePersonne(const Personne *p)
 {
 	if ( p->getMatches().size() != 0 )
 	{
@@ -464,15 +467,13 @@ void Tirage::deletePersonne(Personne *p)
 
 void Tirage::affResult()
 {
-	vector<Personne *> vp;
-
-	vector<int> newId(vp.size());
 
 	for ( Personne * p : allPersonnes)
 	{
 		if ( p != nullptr ) p->calculNote();
 	}
 
+	vector<Personne *> vp;
 	getPersSortNum(vp,Personne::PersonneMore);
 
 //	sort(vp.begin(), vp.end(), Personne::PersonneMore );
@@ -491,12 +492,12 @@ void Tirage::affResult()
 	}
 
 }
-const list<Match *> & Tirage::getLastTour() const
+const vector<Match *> & Tirage::getLastTour() const
 {
 	return allTours.back();
 }
 
-const list<Match *> & Tirage::getTour( int n) const
+const vector<Match *> & Tirage::getTour( int n) const
 {
 	return allTours[n];
 }
@@ -577,6 +578,23 @@ void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne 
 	{
 		result[i]->setId_prov(i);
 	}
+
+}
+int Tirage::nbMatchNonSaisie() const
+{
+	int nb=-1;
+	if ( allTours.size() != 0 )
+	{
+		nb = 0;
+		for ( const Match *m : allTours.back())
+		{
+			if ( !m->isResultInit() )
+			{
+				nb++;
+			}
+		}
+	}
+	return nb;
 
 }
 int Tirage::getNbPersonnes() const

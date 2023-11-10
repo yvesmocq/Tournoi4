@@ -7,6 +7,8 @@
 
 #include "Match.h"
 
+//
+const Match::M_More Match::MatchMore=M_More();
 
 // la creation du match ne veut pas dire sa validation
 // on ne touche pas à Personne lors de cette creation

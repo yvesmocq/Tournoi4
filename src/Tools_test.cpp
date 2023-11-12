@@ -19,7 +19,7 @@ bool test_tools()
 	string s1=string("ABC éê ë ä a D ï îüG");
 	string s2=string("abc ee e a a d i iug");
 
-	char str[40];
+//	char str[40];
 
 //	int lg=pt->toStr(str,s1,40);
 //

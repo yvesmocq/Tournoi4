@@ -40,6 +40,7 @@ void Tools::inittabconvacc()
 Tools::Tools(): generator(time(nullptr)), distribution(normal_distribution<double>(5.0,2.0))
  {
 	inittabconvacc();
+	srand(time(nullptr));
 }
 
 Tools::~Tools() {

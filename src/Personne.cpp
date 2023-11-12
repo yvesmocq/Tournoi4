@@ -83,8 +83,11 @@ int Personne::calculResult() {
 	int diff;
 
 	for (Match *pm : this->matches) {
-		res += pm->getScore(this, &diff);
-		sumdiff += diff;
+		if (pm->isResultInit() )
+		{
+			res += pm->getScore(this, &diff);
+			sumdiff += diff;
+		}
 	}
 	this->result = res;
 	this->diff = diff;

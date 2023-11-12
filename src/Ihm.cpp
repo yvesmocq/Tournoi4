@@ -9,6 +9,8 @@
 #include "Tirage.h"
 #include <algorithm>
 #include <iostream>
+#include <cstdio>
+#include "vt100.h"
 
 Ihm *Ihm::instance = nullptr;
 
@@ -150,7 +152,7 @@ void Ihm::suppPersonne(const vector<Personne*> &vp) {
 
 }
 
-void Ihm::retCont() {
+void Ihm::retCont() const {
 	string rep;
 	cout << "Appuyez sur Entrée pour continuer ...";
 	getline(cin, rep);
@@ -168,7 +170,7 @@ bool Ihm::confirm(const string &lib) {
 string Ihm::nameSize(const Personne *p) const {
 	string str = p->getName();
 	str += string("                                                                                                         ");
-	return str.substr(0, Tools::sizeNameMax - 1);
+	return str.substr(0, 25);
 }
 
 void Ihm::lister(const vector<Personne*> &s) const {
@@ -201,49 +203,158 @@ string Ihm::getStrTour(int n) const {
 	return ss.str();
 }
 
+vector<int> Ihm::getList(const string & str) const
+{
+	char *ptrall = strdup(str.c_str());
+	char *ptr = strtok(ptrall, ",-");
+	vector<int> rep;
+	if ( !isdigit(*ptrall) )
+		return rep;
+	do
+	{
+	rep.push_back(atoi(ptr));
+	} while( (ptr = strtok(NULL,",-") ) != nullptr );
+	free(ptrall);
+	return rep;
+}
+void Ihm::saisieExvol( const vector<Personne *> & vp, vector<Personne *> &exvol) const
+{
+	size_t b_e = vp.size()%4;
+	bool flok=false;
+	while( !flok )
+	{
+		string lev;
+		getLib("Liste des exempts volontaires : ", lev);
+cerr << "sasie XXXXX"<<lev<<"XXX" <<endl;
+		vector<int> a=getList(lev);
+cerr <<"Resultat getList XXX" << Tools::to_string(a)<<"XXX"<<endl;
+		exvol.clear();
+		if ( a.size() == 0 )
+		{
+			flok = true;
+		}
+		else
+		{
+			if ( a.size() > b_e )
+			{
+				cout << "Il y en a trop !!!"<<endl;
+				retCont();
+			}
+			else
+			{
+				flok = true;
+				for( int i:a)
+				{
+					if ( i > (int)vp.size() || i< 1)
+					{
+						cout << "Valeur hors borne !!!" <<endl;
+						flok = false;
+						retCont();
+						break;
+					}
+					exvol.push_back(vp[i-1]);
+				}
+			}
+		}
+	}
+}
+
+
 void Ihm::tournoi() {
 	Tirage *pt = Tirage::getInstance();
 
 	int nt = pt->getNbTours();
 
 	vector<Personne*> vp;
+
+	cout << "Tournoi" << endl;
+	if (pt->getNbTours() != 0) {
+		saisieResultats();
+		pt->affResult();
+	}
 	if (nt == 0) {
 		pt->getPersSortNum(vp, Personne::PNameLess);
 	} else {
 		pt->getPersSortNum(vp, Personne::PersonneMore);
 	}
-
-	cout << "Tournoi" << endl;
 	lister(vp);
-	if (pt->getNbTours() != 0) {
-		saisieResultats();
-		pt->affResult();
+	vector<Personne *> exvol;
+	vector<Personne *> *p_exvol=nullptr;
+	if ( vp.size()%4 != 0 )
+	{
+		bool flok = false;
+		while( !flok )
+		{
+			saisieExvol(vp,exvol);
+			if ( exvol.size() != 0)
+			{
+				cout << "Liste des exempts pour le tour n° "<<(nt+1)<<" :"<<endl;
+				for (Personne *p: exvol)
+				{
+					cout << p->getName() <<endl;
+				}
+				if ( confirm("Confirmez-vous cette liste d'exempts volontaire ?") )
+				{
+					p_exvol = &exvol;
+					flok = true;
+				}
+			}
+			else
+			{
+				flok = true;
+			}
+		}
 	}
+
 	if (confirm(getStrTour(nt))) {
-		bool flag = !confirm("Voulez-vous un tour sans rerencontre si possible ?");
-		pt->makeTirage(flag);
+//		bool flag = !confirm("Voulez-vous un tour sans rerencontre si possible ?");
+		if ( pt->makeTirage(false, p_exvol) || pt->makeTirage(true, p_exvol) )
+		{
+			pt->save(true);
+			saisieResultats();
+			pt->affResult();
+		}
+		else
+		{
+			cout << "Le tirage n'a pas pu se faire !!!";
+			retCont();
+		}
 
-		saisieResultats();
-
-		pt->affResult();
 
 	}
 }
 void Ihm::affMatch(const Match *m) const {
+	if (!m->isResultInit() )
+	{
+		cout << set_bold( true);
+	}
 	char str[4] = "A. ";
 	int im = 0;
 
 	for (Personne *p : m->getPersonnes()) {
 		cout << string(str);
-		if (m->isResultInit()) {
-			cout << m->getResult()[im++];
+		if (m->isResultInit() && p->id_pers != 0 ) {
+			cout << m->getResult()[im];
 		} else {
 			cout << " ";
 		}
 		cout << " " << nameSize(p);
+		if( p->getResult() < 0)
+			cout << "   ";
+		else
+			cout << "(" << p->getResult() <<")";
+		if ( p->getResult() <10)
+			cout << " ";
 		str[0]++;
+		im++;
 	}
+	if (!m->isResultInit() )
+	{
+		cout << set_bold( false);
+	}
+
 	cout << endl;
+	cout <<endl;
 }
 
 void Ihm::afficheMatches() {
@@ -280,8 +391,9 @@ void Ihm::saisieResultats() {
 			Match *m = matches[num - 1];
 			affMatch(m);
 			if (!m->isResultInit() || confirm("Confirmez-vous la modification des résultats de ce match ? ")) {
+				bool flagok=false;
+				array<int, 4> result={};
 				if (m->istittable()) {
-					array<int, 4> result = { };
 					array<int, 4> pers = m->getPersId();
 					array<Personne*, 4> pp = m->getPersonnes();
 					for (int i = 0; i < 4; i++) {
@@ -306,7 +418,7 @@ void Ihm::saisieResultats() {
 						}
 
 					}
-					m->setResult(result);
+					flagok = true;
 				} else {
 					getLib("Donnez le résultat (une lettre suivi d'un 0 ou un 3) :", rep);
 					char c = rep.c_str()[0];
@@ -317,17 +429,19 @@ void Ihm::saisieResultats() {
 					if (c >= 'a' && c <= 'd')
 						nump = c - 'a';
 					if (nump != -1 && (c2 == 3 || c2 == 0)) {
-						array<int, 4> result;
 						for (int i = 0; i < 4; i++) {
 							result[i] = i == nump ? c2 : (2 - c2 / 3);
 						}
-						m->setResult(result);
-
-						pt->save();
+						flagok = true;
 					} else {
 						cout << "Saisie incorrecte : XXX" << rep << "XXX" << endl;
 						retCont();
 					}
+				}
+				if (flagok)
+				{
+					m->setResult(result);
+					pt->save(pt->nbMatchNonSaisie() == 0);
 				}
 
 			}
@@ -362,7 +476,7 @@ int Ihm::getChoix(vector<string> lib) const {
 	return res;
 }
 
-void Ihm::getLib(const string &out, string &result) {
+void Ihm::getLib(const string &out, string &result) const {
 	cout << out;
 	getline(cin, result);
 }

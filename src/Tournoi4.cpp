@@ -71,9 +71,7 @@ int main() {
 	else
 	{
 		Ihm *p_ihm = Ihm::getInstance();
-cerr << "trace1"<<endl;
 		Tirage::getInstance("svt4.dt4");
-		cerr << "trace2"<<endl;
 		p_ihm->lancement();
 
 //		cout << "trace1" <<endl;

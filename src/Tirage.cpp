@@ -148,7 +148,8 @@ Match *Tirage::getMatch(array<int,4> ap) const
 
 
 
-bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2)
+bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2,
+		const vector<Personne *> *vtt)
 {
 	Tools *tools=Tools::getInstance();
 	const bool flagcout=false;
@@ -166,6 +167,13 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 	{
 		flagtittable = true;
 		result[indres] = 0;
+		if ( vtt != nullptr )
+		{
+			for( const Personne * p: *vtt)
+			{
+				result[++indres] = p->id_pers;
+			}
+		}
 		borne = (vp.size() %4) + 1;
 		indpers = -1;
 	}
@@ -257,7 +265,7 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 		}
 		if ( newvp.size() == 4)
 		{
-			bool ret = rec_appar4(newvp, this->partInt.getList().front(), newmatch, mi, fl2);
+			bool ret = rec_appar4(newvp, this->partInt.getList().front(), newmatch, mi, fl2, vtt);
 			if ( ret == false )
 			{
 				flagcout && cout << "Nok1" <<endl;
@@ -271,7 +279,7 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 		bool ret = false;
 		for( const array<int,3>  & stdec4 : this->partInt.getList() )
 		{
-			if ((ret = rec_appar4(newvp, stdec4, newmatch, mi, fl2)))
+			if ((ret = rec_appar4(newvp, stdec4, newmatch, mi, fl2, vtt)))
 				break;
 			if ( nbTentatives >= borneTentatives )
 			{
@@ -304,7 +312,7 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 	}
 }
 
-bool Tirage::makeTirage(bool fl2)
+bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 {
 //cerr << "mttrace1"<<endl;
 	bool flagok = false;
@@ -312,7 +320,7 @@ bool Tirage::makeTirage(bool fl2)
 
 	vector<Match *> newmatch;
 
-	for( int i= 0 ;  !flagok && i < 10 ; i++ )
+	for( int i= 0 ;  !flagok && i < 1 ; i++ )
 	{
 
 //		cerr << "mttrace2"<<endl;
@@ -354,7 +362,7 @@ bool Tirage::makeTirage(bool fl2)
 		for( auto dec:this->partInt.getList())
 		{
 //			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2) && maxIndice < double(vp.size())/2  )
-			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2) )
+			if ( rec_appar4(vp, dec, newmatch,  &maxIndice, fl2, vtt) )
 			{
 				flagcout && cout <<"rec_app true"<<endl;
 				flagok = true;
@@ -552,7 +560,7 @@ void Tirage::setNomFichier(const string &nomFichier)
 	this->nomFichier = nomFichier;
 }
 
-void Tirage::save() const
+void Tirage::save(bool flag_plus) const
 {
 	FlatTirage ft = getFlat();
 	FILE *fd = fopen(nomFichier.c_str(), "wb+");
@@ -560,6 +568,28 @@ void Tirage::save() const
 	fwrite(&ft,sizeof(FlatTirage), 1, fd);
 
 	fclose(fd);
+
+	if ( flag_plus )
+	{
+		size_t pos=nomFichier.rfind(".");
+		stringstream ss;
+		ss << nomFichier.substr(0,pos);
+		string milieu;
+		if ( allTours.size() == 0 )
+		{
+			ss <<"_0_";
+		}
+		else
+		{
+			ss << "_"<<allTours.size()<<"_"<< (nbMatchNonSaisie()==0);
+		}
+		ss << nomFichier.substr(pos);
+		fd = fopen(ss.str().c_str(), "wb+");
+		fwrite(&ft,sizeof(FlatTirage), 1, fd);
+
+		fclose(fd);
+
+	}
 
 
 }
@@ -600,5 +630,10 @@ int Tirage::nbMatchNonSaisie() const
 int Tirage::getNbPersonnes() const
 {
 	return nbPersonnes;
+}
+bool Tirage::isRerenc() const
+{
+	const array<int,5> tab={0,15,24,36,60};
+	return nbPersonnes > tab[min(tab.size()-1,allTours.size())];
 }
 

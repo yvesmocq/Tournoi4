@@ -42,7 +42,7 @@ public:
 	int genElo();
 	bool bernoulli(double p);
 	template<size_t N>
-	string to_string(array<int,N> t)
+	static string to_string(array<int,N> t)
 	{
 
 		stringstream ss("array<>{");
@@ -56,7 +56,7 @@ public:
 		}
 		return ss.str();
 	}
-	string to_string(vector<int> t)
+	static string to_string(vector<int> t)
 	{
 
 		stringstream ss("vector<>{");

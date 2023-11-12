@@ -36,11 +36,15 @@ public:
 	void suppPersonne(const vector<Personne *> & vp);
 	bool confirm(const string &lib );
 	string getStrTour(int n ) const;
-	void retCont();
-	void getLib(const string & out, string &result);
+	void retCont() const;
+	void getLib(const string & out, string &result) const;
 	void saisieResultats();
 	void afficheMatches();
 	void affMatch( const Match *m) const;
+
+	vector<int> getList(const string & str) const;
+	void saisieExvol( const vector<Personne *> & vp, vector<Personne *> &exvol) const;
+
 
 	void tournoi();
 

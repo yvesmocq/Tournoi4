@@ -36,7 +36,8 @@ private:
 	bool isGood3(array<int,4> arr, int nb ) const;
 
 	Match * getMatch(array<int,4>) const;
-	bool rec_appar4(vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2);
+	bool rec_appar4(vector<Personne *> &vp, const array<int,3> & dec, vector<Match*> &newmatch, int *mi, bool fl2,
+			const vector<Personne *> *vtt);
 	vector<Personne *> allPersonnes;
 	list<Match *> allMatches;
 	vector<vector<Match*>> allTours;
@@ -64,7 +65,7 @@ public:
 	~Tirage();
 	int id_match=0;
 
-	bool makeTirage(bool fl2=false);
+	bool makeTirage(bool fl2=false, const vector<Personne *> *vtt=nullptr);
 	void deletePersonne(const Personne *p);
 	void addPersonne(Personne *p);
 	int addMatch(Match *m);
@@ -90,7 +91,9 @@ public:
 
 	int getNbPersonnes() const;
 
-	void save() const;
+	void save(bool flag_plus=false) const;
+
+	bool isRerenc() const;
 
 };
 

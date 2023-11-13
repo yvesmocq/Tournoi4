@@ -170,7 +170,7 @@ bool Ihm::confirm(const string &lib) {
 string Ihm::nameSize(const Personne *p) const {
 	string str = p->getName();
 	str += string("                                                                                                         ");
-	return str.substr(0, 25);
+	return str.substr(0, Tirage::getInstance()->getLengthAff( p )+1);
 }
 
 void Ihm::lister(const vector<Personne*> &s) const {
@@ -225,9 +225,9 @@ void Ihm::saisieExvol( const vector<Personne *> & vp, vector<Personne *> &exvol)
 	{
 		string lev;
 		getLib("Liste des exempts volontaires : ", lev);
-cerr << "sasie XXXXX"<<lev<<"XXX" <<endl;
+//cerr << "sasie XXXXX"<<lev<<"XXX" <<endl;
 		vector<int> a=getList(lev);
-cerr <<"Resultat getList XXX" << Tools::to_string(a)<<"XXX"<<endl;
+//cerr <<"Resultat getList XXX" << Tools::to_string(a)<<"XXX"<<endl;
 		exvol.clear();
 		if ( a.size() == 0 )
 		{
@@ -308,7 +308,8 @@ void Ihm::tournoi() {
 
 	if (confirm(getStrTour(nt))) {
 //		bool flag = !confirm("Voulez-vous un tour sans rerencontre si possible ?");
-		if ( pt->makeTirage(false, p_exvol) || pt->makeTirage(true, p_exvol) )
+//		if ( pt->makeTirage(false, p_exvol) || pt->makeTirage(true, p_exvol) )
+			if ( pt->makeTirage(pt->isRerenc(), p_exvol) )
 		{
 			pt->save(true);
 			saisieResultats();

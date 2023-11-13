@@ -42,6 +42,8 @@ private:
 	list<Match *> allMatches;
 	vector<vector<Match*>> allTours;
 
+	int maxNameAffLength;
+
 	int nbPersonnes;
 
 	array<Personne *, 4> convArray(array<int,4> arr) const;
@@ -61,6 +63,11 @@ public:
 
 	void initInstance();
 	void initInstance(const FlatTirage &ft);
+
+	void initMaxNameAffLength();
+	int getMaxNameAffLength() const;
+	int getLengthAff(const Personne * p) const;
+
 
 	~Tirage();
 	int id_match=0;
@@ -83,6 +90,7 @@ public:
 		return allTours.size();
 	}
 	FlatTirage getFlat() const;
+
 
 
 	void getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct );

@@ -21,7 +21,7 @@ using namespace std;
 //
 Tirage * Tirage::instance=nullptr;
 
-Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), nbPersonnes(0), maxIndice(0),nbTentatives(0)  {
+Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), maxNameAffLength(0), nbPersonnes(0), maxIndice(0),nbTentatives(0)  {
 	Personne::resetSerieId();
 }
 
@@ -61,6 +61,7 @@ void Tirage::initInstance( const FlatTirage &ft)
 		{
 			Personne *p = new Personne(fp);
 			allPersonnes[p->id_pers] = p;
+			maxNameAffLength = max(maxNameAffLength, p->getAffLength());
 			nbPersonnes++;
 		}
 	}
@@ -163,15 +164,18 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 	int indpers=0;
 	int borne = 4;
 	bool flagtittable=false;
+	Mask<> maskdeja;
 	if ( vp.size() %4 != 0 )
 	{
 		flagtittable = true;
 		result[indres] = 0;
+		maskdeja.setBit(result[indres]);
 		if ( vtt != nullptr )
 		{
 			for( const Personne * p: *vtt)
 			{
 				result[++indres] = p->id_pers;
+				maskdeja.setBit(result[indres]);
 			}
 		}
 		borne = (vp.size() %4) + 1;
@@ -180,10 +184,10 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 	else
 	{
 		result[indres]= vp[indpers]->id_pers;
+		maskdeja.setBit(result[indres]);
 	}
 
 
-	Mask<> maskdeja(result[indres]);
 	indpers += dec[indres++];
 	while( indres < borne )
 	{
@@ -198,8 +202,10 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 			flborne = (indpers >= (int)vp.size());
 			if ( ! flborne )
 			{
-				if ( flagtittable && ! vp[indpers]->getMaskMatch1().isBit(0))
-					fltrouve = true;
+				if ( flagtittable )
+				{
+					fltrouve = ! vp[indpers]->getMaskMatch1().isBit(0) && !maskdeja.isBit(vp[indpers]->id_pers);
+				}
 				else
 				{
 					if( fl2 )
@@ -455,8 +461,31 @@ bool Tirage::isGood3(array<int,4> arr, int nb ) const
 void Tirage::addPersonne(Personne *p)
 {
 	allPersonnes[p->id_pers] = p;
+	maxNameAffLength = max(maxNameAffLength, p->getAffLength());
 	nbPersonnes++;
 }
+// private
+void Tirage::initMaxNameAffLength()
+{
+	maxNameAffLength = 0;
+	for ( Personne *p:allPersonnes )
+	{
+		if ( p != nullptr && p->id_pers != 0 )
+		{
+			maxNameAffLength = max(maxNameAffLength, p->getAffLength());
+		}
+	}
+
+}
+int Tirage::getMaxNameAffLength() const
+{
+	return maxNameAffLength;
+}
+int Tirage::getLengthAff(const Personne * p) const
+{
+	return maxNameAffLength+p->getDiffAccent();
+}
+
 void Tirage::deletePersonne(const Personne *p)
 {
 	if ( p->getMatches().size() != 0 )
@@ -468,6 +497,7 @@ void Tirage::deletePersonne(const Personne *p)
 		allPersonnes[p->id_pers] = nullptr;
 		delete p;
 		nbPersonnes--;
+		initMaxNameAffLength();
 	}
 }
 
@@ -634,6 +664,6 @@ int Tirage::getNbPersonnes() const
 bool Tirage::isRerenc() const
 {
 	const array<int,5> tab={0,15,24,36,60};
-	return nbPersonnes > tab[min(tab.size()-1,allTours.size())];
+	return nbPersonnes <= tab[min(tab.size()-1,allTours.size())];
 }
 

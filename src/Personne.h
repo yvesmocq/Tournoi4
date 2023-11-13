@@ -91,11 +91,14 @@ public:
 	void setName(const string & name);
 	const string & getName() const;
 	const string & getNameSimple() const;
+	int getAffLength() const;
+	int getDiffAccent() const;
+
 
 	const list<Match *> &getMatches() const;
 	int addMatch(Match *m);
 	string toStr() const;
-	string toStrName() const;
+	string toStrName(int lg=25) const;
 	string mkLigne() const;
 
 	string numName() const;

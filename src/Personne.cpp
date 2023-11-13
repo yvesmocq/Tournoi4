@@ -76,6 +76,14 @@ Personne::~Personne() {
 		serie_id_pers = id_pers;
 	}
 }
+int Personne::getAffLength() const
+{
+	return nameSimple.length() - name.length();
+}
+int Personne::getDiffAccent() const
+{
+	return 2*name.length() - nameSimple.length();
+}
 
 int Personne::calculResult() {
 	int res = 0;
@@ -159,13 +167,9 @@ string Personne::toStr() const {
 	sprintf(str, "%*d", 2, id_prov + 1);
 	return string(str);
 }
-string Personne::toStrName() const {
-	char str[100];
-	char str2[30];
-	strcpy(str, name.c_str());
-	str[30] = '\0';
-	sprintf(str2, "%*s", 30, str);
-	return string(str2);
+string Personne::toStrName(int lg) const {
+	string str=name+"                            ";
+	return str.substr(0,Tirage::getInstance()->getLengthAff( this ));
 }
 
 string Personne::mkLigne() const {

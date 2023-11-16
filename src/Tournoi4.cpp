@@ -56,9 +56,23 @@ bool test_all()
 	return true;
 }
 
-int main() {
+int main(int ac, const char *av[] ) {
 	// bool flag_test=false;
 	bool flag_test=false;
+
+	if ( ac == 2 )
+	{
+		if ( string(av[1]) == "test" )
+			flag_test = true;
+		else
+		{
+			if ( string(av[1]) == "result")
+			{
+				Tirage::getInstance("svt4.dt4")->affResult();
+				exit(0);
+			}
+		}
+	}
 
 	if ( flag_test )
 	{

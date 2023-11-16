@@ -331,7 +331,6 @@ void Ihm::affMatch(const Match *m) const {
 	}
 	char str[4] = "A. ";
 	int im = 0;
-
 	for (Personne *p : m->getPersonnes()) {
 		cout << string(str);
 		if (m->isResultInit() && p->id_pers != 0 ) {
@@ -362,6 +361,8 @@ void Ihm::afficheMatches() {
 	Tirage *pt = Tirage::getInstance();
 	const vector<Match*> &matches = pt->getLastTour();
 	int ind = 1;
+	cout <<endl<<endl<<endl;
+
 	for (Match *m : matches) {
 		cout << ind++ << ". ";
 		affMatch(m);

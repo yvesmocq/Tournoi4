@@ -505,6 +505,9 @@ void Tirage::deletePersonne(const Personne *p)
 
 void Tirage::affResult()
 {
+	cout <<endl <<endl<<endl;
+
+	cout << "Resultat après tour n° " << getNbTours() <<endl;
 
 	for ( Personne * p : allPersonnes)
 	{
@@ -528,6 +531,8 @@ void Tirage::affResult()
 	{
 		cout << p->mkLigne() << endl;
 	}
+	cout <<endl <<endl<<endl;
+
 
 }
 const vector<Match *> & Tirage::getLastTour() const

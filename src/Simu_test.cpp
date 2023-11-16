@@ -232,6 +232,57 @@ void verif_borne(int nbpers, int flagcout)
 
 
 }
+bool verif_borne_fixe(int nbpers, int flagcout)
+{
+//	cerr <<"trace3"<<endl;
+
+	Simu *simu=Simu::getInstance(nbpers);
+//	cerr <<"trace4"<<endl;
+
+	const bool flagoutplus=false;
+
+	flagcout && cout <<"fixe : nbpers="<<nbpers<<" i= ";
+
+	bool flag=false;
+
+	Tirage *pt = Tirage::getInstance();
+
+	int i=0;
+	while( i < 50)
+	{
+		flagoutplus && cerr <<"trace i="<<i<< " flag="<<flag<< endl;
+		if ( pt->isRerenc() && !flag )
+		{
+			flagcout && cout << i <<" , ";
+			flag = true;
+		}
+		if ( !simu->simule(1,flag) )
+		{
+			if( flag )
+				break;
+			else
+			{
+				cout <<"Erreur !!!! verif_fixe"<<endl;
+				return false;
+			}
+		}
+		else
+		{
+			flagoutplus && cerr << "verif_tour="<< verif_tour(i)<<endl;
+			flagoutplus && cerr <<"nbTentatives=" << simu->getNbTentatives()<<endl;
+//			simu->affResult();
+
+			i++;
+		}
+		flagoutplus && cout <<"nbTentatives=" << simu->getNbTentatives()<<endl;
+
+
+	}
+	flagcout && cout <<i<<endl;
+
+	return true;
+
+}
 bool test_simubig()
 {
 //	cerr <<"trace1"<<endl;
@@ -244,6 +295,8 @@ bool test_simubig()
 
 //		cerr << "verf_borne i="<<i<<endl;
 		verif_borne( i , true);
+		if ( !verif_borne_fixe(i,true) )
+			return false;
 		if ( Tirage::getInstance()->getNbPersonnes() != i)
 		{
 			cout <<"Erreur NbPersonnes"<<endl;

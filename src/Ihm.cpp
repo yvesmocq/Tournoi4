@@ -259,7 +259,6 @@ void Ihm::saisieExvol( const vector<Personne *> & vp, vector<Personne *> &exvol)
 	}
 }
 
-
 void Ihm::tournoi() {
 	Tirage *pt = Tirage::getInstance();
 

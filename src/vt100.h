@@ -120,12 +120,7 @@
 #ifndef VT100_MACRO_H
 #define VT100_MACRO_H
 
-#ifndef TRUE
-#define TRUE (1)
-#endif
-#ifndef FALSE
-#define FALSE (0)
-#endif
+
 
 #define VT_BLACK    0
 #define VT_RED      1
@@ -171,10 +166,10 @@
 #define insert_char( count ) "\33[" << count << "@"
 #define delete_char( count ) "\33[" << count << "P"
 
-static bool is_b = FALSE;
-static bool is_i = FALSE;
-static bool is_u = FALSE;
-static bool is_r = FALSE;
+static bool is_b = false;
+static bool is_i = false;
+static bool is_u = false;
+static bool is_r = false;
 static int  fg_c = VT_DEFAULT;
 static int  bg_c = VT_DEFAULT;
 

@@ -503,38 +503,7 @@ void Tirage::deletePersonne(const Personne *p)
 
 
 
-void Tirage::affResult()
-{
-	cout <<endl <<endl<<endl;
 
-	cout << "Resultat après tour n° " << getNbTours() <<endl;
-
-	for ( Personne * p : allPersonnes)
-	{
-		if ( p != nullptr ) p->calculNote();
-	}
-
-	vector<Personne *> vp;
-	getPersSortNum(vp,Personne::PersonneMore);
-
-//	sort(vp.begin(), vp.end(), Personne::PersonneMore );
-//
-//	vp.pop_back();
-//
-//	for( int i = 0 ; i < (int)vp.size() ; i++ )
-//	{
-//		vp[i]->setId_prov(i);
-//	}
-
-
-	for ( Personne *p:vp)
-	{
-		cout << p->mkLigne() << endl;
-	}
-	cout <<endl <<endl<<endl;
-
-
-}
 const vector<Match *> & Tirage::getLastTour() const
 {
 	return allTours.back();

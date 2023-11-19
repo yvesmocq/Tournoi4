@@ -66,65 +66,6 @@ int Match::getScore(const Personne *p, int *diff) const
 	return -1;
 }
 
-string Match::toStr( const Personne *p) const
-{
-
-	int n=getScore(p);
-
-	array<int,3> ar;
-
-	int ind_ar=(n==1) ? 1 : 0;
-
-	int nbadv = 3;
-
-	if ( pers[0] == 0 )
-	{
-		if (pers[2] == 0 )
-			nbadv = 0;
-		else if( pers[3] == 0 )
-			nbadv = 1;
-		else
-			nbadv = 2;
-	}
-
-
-	for ( int i = 0 ; i < 4 ; i++)
-	{
-		if ( pers[i] == p->id_pers )
-			continue;
-		if ( result[i] == 0)
-		{
-			ar[2] = i;
-		}
-		else if ( result[i] == 3 )
-		{
-			ar[0] = i;
-		}
-		else
-		{
-			ar[ind_ar++] = i;
-		}
-	}
-
-	stringstream ss;
-
-	ss << " " << n<< " ";
-
-	for ( int i=0 ; i <nbadv ; i++)
-	{
-		ss << personnes[ar[i]]->toStr();
-		if ( i!= nbadv-1)
-			ss<<",";
-	}
-	for ( int i = nbadv ; i < 3 ; i++ )
-	{
-		ss <<"   ";
-	}
-	ss <<" ";
-
-	return ss.str();
-
-}
 
 array<Mask<>, 4> Match::get3() const
 {

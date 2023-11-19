@@ -68,7 +68,8 @@ int main(int ac, const char *av[] ) {
 		{
 			if ( string(av[1]) == "result")
 			{
-				Tirage::getInstance("svt4.dt4")->affResult();
+				Tirage::getInstance("svt4.dt4");
+				Ihm::getInstance()->affResult();
 				exit(0);
 			}
 		}

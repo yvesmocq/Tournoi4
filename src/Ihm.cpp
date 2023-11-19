@@ -184,7 +184,7 @@ void Ihm::lister(const vector<Personne*> &s) const {
 		ind = ligne;
 		for (int col = 0; col < nbColonne && ind < (int) s.size(); col++) {
 			const Personne *p = s[ind];
-			cout << p->toStr() << ". " << nameSize(p);
+			cout << toStr(p) << ". " << nameSize(p);
 			ind += nbLigne;
 			if (ligne == nbLigne - 1 && col == reste - 1)
 				break;
@@ -269,7 +269,7 @@ void Ihm::tournoi() {
 	cout << "Tournoi" << endl;
 	if (pt->getNbTours() != 0) {
 		saisieResultats();
-		pt->affResult();
+		affResult();
 	}
 	if (nt == 0) {
 		pt->getPersSortNum(vp, Personne::PNameLess);
@@ -312,7 +312,7 @@ void Ihm::tournoi() {
 		{
 			pt->save(true);
 			saisieResultats();
-			pt->affResult();
+			affResult();
 		}
 		else
 		{
@@ -349,7 +349,7 @@ void Ihm::affMatch(const Match *m) const {
 	}
 	if (!m->isResultInit() )
 	{
-		cout << set_bold( false);
+		cout << set_bold(false);
 	}
 
 	cout << endl;
@@ -503,5 +503,148 @@ int Ihm::getChoixNum(string phrase, int from, int to) {
 	} while (isdigit(str[0]) && from <= res && res <= to);
 
 	return res;
+
+}
+string Ihm::toStr( const Personne *p) const {
+	char str[10];
+	sprintf(str, "%*d", 2, p->getIdProv() + 1);
+	return string(str);
+}
+string Ihm::toStrName(const Personne *p, int lg) const {
+	string str=p->getName()+"                            ";
+	cerr << "XXX" << p->getName() <<"XXX diff=" <<p->getDiffAccent()<<endl;
+	return str.substr(0,lg + p->getDiffAccent() );
+}
+
+
+//string Personne::numName() const {
+//	stringstream ss;
+//
+//	ss << (id_prov + 1) << ". " << name;
+//
+//	return ss.str();
+//
+//}
+
+string Ihm::mkLigne(const Personne *p) const {
+	stringstream ss;
+
+	ss << "| " << this->toStr(p) << " |";
+	ss << toStrName(p, Tirage::getInstance()->getMaxNameAffLength()) << "|";
+
+	for (Match *m : p->getMatches()) {
+		ss << toStr(m, p);
+		ss << "|";
+	}
+	ss << " ";
+
+	ss << p->getResult();
+	ss << " |";
+	ss << p->getDepartage();
+	ss << " |";
+
+	return ss.str();
+
+}
+string Ihm::toStr( const Match *m, const Personne *p) const
+{
+
+	int n=m->getScore(p);
+
+	array<int,4> pers=m->getPersId();
+	array<int,4> result=m->getResult();
+	array<Personne *,4> personnes=m->getPersonnes();
+
+
+	array<int,3> ar;
+
+	int ind_ar=(n==1) ? 1 : 0;
+
+	int nbadv = 3;
+
+	if ( pers[0] == 0 )
+	{
+		if (pers[2] == 0 )
+			nbadv = 0;
+		else if( pers[3] == 0 )
+			nbadv = 1;
+		else
+			nbadv = 2;
+	}
+
+
+	for ( int i = 0 ; i < 4 ; i++)
+	{
+		if ( pers[i] == p->id_pers )
+			continue;
+		if ( result[i] == 0)
+		{
+			ar[2] = i;
+		}
+		else if ( result[i] == 3 )
+		{
+			ar[0] = i;
+		}
+		else
+		{
+			ar[ind_ar++] = i;
+		}
+	}
+
+	stringstream ss;
+
+	ss << " " << n<< " ";
+
+	for ( int i=0 ; i <nbadv ; i++)
+	{
+		ss << toStr(personnes[ar[i]]);
+		if ( i!= nbadv-1)
+			ss<<",";
+	}
+	for ( int i = nbadv ; i < 3 ; i++ )
+	{
+		ss <<"   ";
+	}
+	ss <<" ";
+
+	return ss.str();
+
+}
+void Ihm::affResult() const
+{
+	Tirage *pt=Tirage::getInstance();
+
+	cout <<endl <<endl<<endl;
+
+	cout << "Resultat après tour n° " << pt->getNbTours() <<endl;
+
+	for ( Personne * p : pt->getAllPersonnes())
+	{
+		if ( p != nullptr ) p->calculNote();
+	}
+	for ( Personne * p : pt->getAllPersonnes())
+	{
+		if ( p != nullptr ) p->calculDepartage();
+	}
+
+	vector<Personne *> vp;
+	pt->getPersSortNum(vp,Personne::PMoreDepartage);
+
+//	sort(vp.begin(), vp.end(), Personne::PersonneMore );
+//
+//	vp.pop_back();
+//
+//	for( int i = 0 ; i < (int)vp.size() ; i++ )
+//	{
+//		vp[i]->setId_prov(i);
+//	}
+
+
+	for ( Personne *p:vp)
+	{
+		cout << mkLigne(p) << endl;
+	}
+	cout <<endl <<endl<<endl;
+
 
 }

@@ -49,6 +49,7 @@ private:
 	Mask<> maskMatch1;
 	Mask<> maskMatch2;
 	int nbScore;
+	int departage; // somme des resultats des adversaires
 	int calculResult();
 
 
@@ -63,6 +64,12 @@ private:
 	struct P_NameLess
 	{
 			bool operator()(Personne *p1, Personne *p2) const { return p1->getNameSimple() < p2->getNameSimple();}
+	};
+	struct P_MoreDepartage
+	{
+        bool operator()(Personne *p1, Personne *p2) const { return (p1->getResult() == p2->getResult() && p1->getDepartage() > p2->getDepartage())
+        															|| p1->getResult() > p2->getResult();}
+
 	};
 
 
@@ -85,8 +92,12 @@ public:
 	void setPresent( bool flag);
 	bool isPresent() const;
 
+	int getIdProv() const;
+
 
 	double calculNote();
+	void calculDepartage();
+	int getDepartage() const;
 	void mkMaskMatch();
 	void setName(const string & name);
 	const string & getName() const;
@@ -95,11 +106,9 @@ public:
 	int getDiffAccent() const;
 
 
+
 	const list<Match *> &getMatches() const;
 	int addMatch(Match *m);
-	string toStr() const;
-	string toStrName(int lg=25) const;
-	string mkLigne() const;
 
 	string numName() const;
 
@@ -115,6 +124,7 @@ public:
 	static const P_Less PersonneLess;
 	static const P_More PersonneMore;
 	static const P_NameLess PNameLess;
+	static const P_MoreDepartage PMoreDepartage;
 
 
 	static void sortnum( vector<Personne *> & v, function<bool(Personne *,Personne *)> fct);

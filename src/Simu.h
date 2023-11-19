@@ -13,6 +13,7 @@
 using namespace std;
 
 #include "Tools.h"
+#include "Ihm.h"
 #include "Tirage.h"
 
 class Simu final {
@@ -36,7 +37,7 @@ public:
 
 	static Simu *getInstance(int nb=52);
 
-	void affResult() { Tirage::getInstance()->affResult(); }
+	void affResult() { Ihm::getInstance()->affResult(); }
 	int getNbTentatives() const
 	{
 		return Tirage::getInstance()->getNbTentatives();

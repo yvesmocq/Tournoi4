@@ -18,6 +18,8 @@ int Personne::serie_id_pers = 1;
 const Personne::P_Less Personne::PersonneLess = P_Less();
 const Personne::P_More Personne::PersonneMore = P_More();
 const Personne::P_NameLess Personne::PNameLess = P_NameLess();
+const Personne::P_MoreDepartage Personne::PMoreDepartage = P_MoreDepartage();
+
 
 // static
 void Personne::resetSerieId() {
@@ -60,8 +62,8 @@ Personne::Personne(const string &n) :
 		present(true), id_pers(Personne::getIdPersNext()) {
 	setName(n);
 }
-Personne::Personne(int id) :
-		id_pers(id) {
+Personne::Personne(int id):
+		 present(false), nbScore(0),id_pers(id) {
 	assert(id_pers == 0 && "forçage de l'identifiant d'un objet Personne différent de zéro");
 
 }
@@ -109,6 +111,28 @@ double Personne::calculNote() {
 	else
 		this->note = double(result) + this->diff * 0.01 + Tools::doubleRand() * 0.0001;
 	return this->note;
+}
+
+void Personne::calculDepartage()
+{
+	int res=0;
+	for (Match *pm : this->matches) {
+		if (pm->isResultInit() )
+		{
+			for ( const Personne *p:pm->getPersonnes() )
+			{
+				if ( p != this && p->id_pers != 0)
+				{
+					res += p->getResult();
+				}
+			}
+		}
+	}
+	this->departage = res;
+}
+int Personne::getDepartage() const
+{
+	return departage;
 }
 
 void Personne::mkMaskMatch() {
@@ -161,44 +185,10 @@ double Personne::getResult() const {
 void Personne::setId_prov(int id_prov) {
 	this->id_prov = id_prov;
 }
-
-string Personne::toStr() const {
-	char str[10];
-	sprintf(str, "%*d", 2, id_prov + 1);
-	return string(str);
-}
-string Personne::toStrName(int lg) const {
-	string str=name+"                            ";
-	return str.substr(0,Tirage::getInstance()->getLengthAff( this ));
+int Personne::getIdProv() const {
+	return this->id_prov;
 }
 
-string Personne::mkLigne() const {
-	stringstream ss;
-
-	ss << "| " << this->toStr() << " |";
-	ss << this->toStrName() << "|";
-
-	for (Match *m : matches) {
-		ss << m->toStr(this);
-		ss << "|";
-	}
-	ss << " ";
-
-	ss << this->result;
-	ss << " |";
-
-	return ss.str();
-
-}
-
-string Personne::numName() const {
-	stringstream ss;
-
-	ss << (id_prov + 1) << ". " << name;
-
-	return ss.str();
-
-}
 
 // static function
 //void sortnum( vector<Personne *> & vec, function<bool(Personne *,Personne *)> fct)

@@ -76,7 +76,6 @@ public:
 	void deletePersonne(const Personne *p);
 	void addPersonne(Personne *p);
 	int addMatch(Match *m);
-	void affResult();
 	const vector<Match *> &getLastTour() const;
 	const vector<Match *> &getTour(int n) const;
 	const vector<Personne *> & getAllPersonnes() const;

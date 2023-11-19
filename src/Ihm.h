@@ -50,6 +50,12 @@ public:
 
 	void lister(const vector<Personne *> &s) const;
 	string nameSize( const Personne *p) const;
+	string toStr( const Personne *p) const;
+	string toStrName(const Personne *p, int lg) const;
+	string mkLigne(const Personne *p) const;
+	string toStr( const Match *m, const Personne *) const;
+	void affResult() const;
+
 
 };
 

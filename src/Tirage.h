@@ -49,11 +49,16 @@ private:
 	array<Personne *, 4> convArray(array<int,4> arr) const;
 
 	string nomFichier;
+	string nomFichierAdd;
+
 
 	int maxIndice;
 
 	int nbTentatives;
 	const int borneTentatives=20000;
+
+	void save(const string & nomfic, bool flag_plus=false) const;
+
 public:
 	void save(string fileName) const;
 	static Tirage *getInstance();
@@ -95,6 +100,7 @@ public:
 	void getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct );
 
 	void setNomFichier( const string &nomFichier );
+	void setNomFichierAdd( const string &nomFichier );
 
 	int getNbPersonnes() const;
 

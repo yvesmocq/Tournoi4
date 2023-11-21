@@ -13,6 +13,7 @@
 #include <sstream>
 #include <random>
 #include <array>
+#include <string>
 using namespace std;
 
 
@@ -73,6 +74,8 @@ public:
 
 	string toSimple( string from) const;
 	int cmp( const char *p1, const char *p2, size_t s) const;
+
+	int nbChif(int n) const;
 
 
 };

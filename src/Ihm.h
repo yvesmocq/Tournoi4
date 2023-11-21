@@ -10,6 +10,7 @@
 using namespace std;
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "Personne.h"
 
 class Ihm final {
@@ -52,9 +53,12 @@ public:
 	string nameSize( const Personne *p) const;
 	string toStr( const Personne *p) const;
 	string toStrName(const Personne *p, int lg) const;
-	string mkLigne(const Personne *p) const;
+	string mkLigne(const Personne *p, int nc_result, int nc_dep) const;
 	string toStr( const Match *m, const Personne *) const;
+	string toStr( int val, int lg) const;
+	string toStr( string s, int lg) const;
 	void affResult() const;
+	int nbChif(int n) const;
 
 
 };

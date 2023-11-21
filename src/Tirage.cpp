@@ -21,7 +21,7 @@ using namespace std;
 //
 Tirage * Tirage::instance=nullptr;
 
-Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), maxNameAffLength(0), nbPersonnes(0), maxIndice(0),nbTentatives(0)  {
+Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), maxNameAffLength(0), nbPersonnes(0), nomFichierAdd(""), maxIndice(0),nbTentatives(0)  {
 	Personne::resetSerieId();
 }
 
@@ -563,11 +563,17 @@ void Tirage::setNomFichier(const string &nomFichier)
 {
 	this->nomFichier = nomFichier;
 }
-
-void Tirage::save(bool flag_plus) const
+void Tirage::setNomFichierAdd(const string &nomFichier)
 {
+	this->nomFichierAdd = nomFichier;
+}
+
+void Tirage::save(const string & nomfic, bool flag_plus) const
+{
+	cerr <<"save nomFichier="<< nomfic<<endl;
+
 	FlatTirage ft = getFlat();
-	FILE *fd = fopen(nomFichier.c_str(), "wb+");
+	FILE *fd = fopen(nomfic.c_str(), "wb+");
 
 	fwrite(&ft,sizeof(FlatTirage), 1, fd);
 
@@ -575,9 +581,9 @@ void Tirage::save(bool flag_plus) const
 
 	if ( flag_plus )
 	{
-		size_t pos=nomFichier.rfind(".");
+		size_t pos=nomfic.rfind(".");
 		stringstream ss;
-		ss << nomFichier.substr(0,pos);
+		ss << nomfic.substr(0,pos);
 		string milieu;
 		if ( allTours.size() == 0 )
 		{
@@ -587,15 +593,21 @@ void Tirage::save(bool flag_plus) const
 		{
 			ss << "_"<<allTours.size()<<"_"<< (nbMatchNonSaisie()==0);
 		}
-		ss << nomFichier.substr(pos);
+		ss << nomfic.substr(pos);
 		fd = fopen(ss.str().c_str(), "wb+");
 		fwrite(&ft,sizeof(FlatTirage), 1, fd);
 
 		fclose(fd);
 
 	}
-
-
+}
+void Tirage::save(bool flag_plus) const
+{
+	save( nomFichier,flag_plus);
+	if ( nomFichierAdd != "" )
+	{
+		save( nomFichierAdd, flag_plus);
+	}
 }
 void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct )
 {

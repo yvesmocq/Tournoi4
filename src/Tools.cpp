@@ -103,6 +103,10 @@ int Tools::cmp( const char *p1, const char *p2, size_t s) const
 	}
 	return s;
 }
+int Tools::nbChif( int n) const
+{
+	return std::to_string(n).length();
+}
 
 
 

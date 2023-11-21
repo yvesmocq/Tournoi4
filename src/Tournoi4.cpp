@@ -59,20 +59,39 @@ bool test_all()
 int main(int ac, const char *av[] ) {
 	// bool flag_test=false;
 	bool flag_test=false;
+	bool flag_save=false;
+	string rep_save;
 
-	if ( ac == 2 )
+	int indarg=1;
+	while( indarg < ac )
 	{
-		if ( string(av[1]) == "test" )
-			flag_test = true;
-		else
+		if ( string(av[indarg]) == "test" )
 		{
-			if ( string(av[1]) == "result")
+			flag_test = true;
+			indarg++;
+			break;
+		}
+		if ( string(av[indarg]) == "result")
+		{
+			Tirage::getInstance("svt4.dt4");
+			Ihm::getInstance()->affResult();
+			exit(0);
+		}
+		if ( string(av[indarg]) == "--save" )
+		{
+			if ( ++indarg < ac )
 			{
-				Tirage::getInstance("svt4.dt4");
-				Ihm::getInstance()->affResult();
-				exit(0);
+				rep_save = string(av[indarg]);
+				flag_save = true;
+			}
+			else
+			{
+				cerr << "erreur il manque le repertoire de sauvegarde"<<endl;
+				exit(-1);
 			}
 		}
+		indarg++;
+
 	}
 
 	if ( flag_test )
@@ -86,7 +105,11 @@ int main(int ac, const char *av[] ) {
 	else
 	{
 		Ihm *p_ihm = Ihm::getInstance();
-		Tirage::getInstance("svt4.dt4");
+		Tirage *pt = Tirage::getInstance("svt4.dt4");
+		if ( flag_save )
+		{
+			pt->setNomFichierAdd(rep_save+"/svt4.dt4");
+		}
 		p_ihm->lancement();
 
 //		cout << "trace1" <<endl;

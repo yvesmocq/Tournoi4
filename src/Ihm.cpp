@@ -28,7 +28,7 @@ Ihm::~Ihm() {
 
 void Ihm::lancement() {
 
-	vector<string> lib = { "Gestion Personne", "Lancement Tournoi", "Sortie" };
+	vector<string> lib = { "Gestion Personne", "Gestion Présence", "Lancement Tournoi", "Sortie" };
 
 	bool flagcont = true;
 
@@ -38,9 +38,12 @@ void Ihm::lancement() {
 			gesPersonne();
 			break;
 		case 1:
-			tournoi();
+			presence();
 			break;
 		case 2:
+			tournoi();
+			break;
+		case 3:
 			Tirage::getInstance()->save();
 			flagcont = false;
 			break;
@@ -48,6 +51,45 @@ void Ihm::lancement() {
 	}
 
 }
+
+void Ihm::presence() {
+	cout << "Gestion présence" << endl;
+	Tirage *pt = Tirage::getInstance();
+
+
+	bool flagcont = true;
+
+	string strnum;
+
+	vector<Personne*> vp;
+	while (flagcont) {
+		pt->getPersSortNum(vp, Personne::PNameLess);
+		lister(vp);
+
+		getLib("Numéro de la personne dont on modifie la présence : ", strnum);
+		int num = atoi(strnum.c_str());
+		if (num > 0 && num <= (int) vp.size()) {
+			Personne *p=vp[num-1];
+			bool etat=p->isPresent();
+			string lib;
+			if ( etat )
+				lib="Confirmez-vous l'absence XXX"+p->getName()+"XXX";
+			else
+				lib="Confirmez-vous la présence de XXX"+p->getName()+"XXX";
+			if ( confirm(lib) )
+			{
+				p->setPresent(!etat);
+			}
+
+		}
+		else
+		{
+			flagcont = false;
+		}
+	}
+
+}
+
 
 void Ihm::gesPersonne() {
 	vector<string> lib = { "Ajout d'une personne",
@@ -182,6 +224,23 @@ string Ihm::nameSize(const Personne *p) const {
 	return str.substr(0, Tirage::getInstance()->getLengthAff(p) + 1);
 }
 
+string Ihm::strPres( const Personne *p) const{
+	stringstream ss;
+
+	if ( p->isPresent())
+	{
+		ss << set_colors(VT_GREEN, VT_DEFAULT) <<"v";
+	}
+	else
+	{
+		ss << set_colors(VT_RED, VT_DEFAULT) <<"x";
+	}
+	ss <<set_colors(VT_DEFAULT,VT_DEFAULT);
+
+	return ss.str();
+
+}
+
 void Ihm::lister(const vector<Personne*> &s) const {
 	const int nbColonne = 4;
 	int nbLigne = (s.size() + nbColonne - 1) / nbColonne;
@@ -193,7 +252,7 @@ void Ihm::lister(const vector<Personne*> &s) const {
 		ind = ligne;
 		for (int col = 0; col < nbColonne && ind < (int) s.size(); col++) {
 			const Personne *p = s[ind];
-			cout << toStr(p) << ". " << nameSize(p);
+			cout << toStr(p) << ". " <<strPres(p)<<" . "<< nameSize(p);
 			ind += nbLigne;
 			if (ligne == nbLigne - 1 && col == reste - 1)
 				break;

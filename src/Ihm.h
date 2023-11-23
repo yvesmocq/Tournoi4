@@ -35,6 +35,7 @@ public:
 	void ajoutPersonne();
 	void modifPersonne(const vector<Personne *> & vp);
 	void suppPersonne(const vector<Personne *> & vp);
+	void presence();
 	bool confirm(const string &lib );
 	string getStrTour(int n ) const;
 	void retCont() const;
@@ -57,6 +58,7 @@ public:
 	string toStr( const Match *m, const Personne *) const;
 	string toStr( int val, int lg) const;
 	string toStr( string s, int lg) const;
+	string strPres( const Personne *p) const;
 	void affResult() const;
 	int nbChif(int n) const;
 

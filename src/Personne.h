@@ -88,6 +88,9 @@ public:
 	Personne( const FlatPers &fp );
 	~Personne();
 
+	bool all(){return true;};
+
+	static bool stAll( const Personne * p){return p != nullptr;}
 
 	void setPresent( bool flag);
 	bool isPresent() const;

@@ -97,7 +97,7 @@ public:
 
 
 
-	void getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct );
+	void getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct, function<bool(const Personne*)> filtre = Personne::stAll );
 
 	void setNomFichier( const string &nomFichier );
 	void setNomFichierAdd( const string &nomFichier );

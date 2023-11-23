@@ -57,6 +57,7 @@ Simu::Simu(int nbPers): nbPers(nbPers)  {
 
 Simu::~Simu()
 {
+	delete Tirage::getInstance();
 	Simu::instance = nullptr;
 }
 

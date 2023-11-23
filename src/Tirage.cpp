@@ -609,12 +609,13 @@ void Tirage::save(bool flag_plus) const
 		save( nomFichierAdd, flag_plus);
 	}
 }
-void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct )
+void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne *,Personne *)> fct,
+		function<bool(const Personne*)> filtre )
 {
 	result.clear();
 	for ( int i = 1 ; i < (int)allPersonnes.size() ; i++ )
 	{
-		if ( allPersonnes[i] != nullptr )
+		if ( filtre(allPersonnes[i]) )
 		{
 			result.push_back(allPersonnes[i]);
 		}
@@ -649,7 +650,7 @@ int Tirage::getNbPersonnes() const
 }
 bool Tirage::isRerenc() const
 {
-	const array<int,5> tab={0,15,24,36,60};
+	const array<int,6> tab={0,15,24,36,60,10000};
 	return nbPersonnes <= tab[min(tab.size()-1,allTours.size())];
 }
 

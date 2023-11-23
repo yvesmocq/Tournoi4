@@ -236,6 +236,7 @@ bool verif_borne_fixe(int nbpers, int flagcout)
 {
 //	cerr <<"trace3"<<endl;
 
+	delete Simu::getInstance();
 	Simu *simu=Simu::getInstance(nbpers);
 //	cerr <<"trace4"<<endl;
 
@@ -246,6 +247,8 @@ bool verif_borne_fixe(int nbpers, int flagcout)
 	bool flag=false;
 
 	Tirage *pt = Tirage::getInstance();
+//	cout <<"nbPersonnes="<<pt->getNbPersonnes()<<endl;
+//	cout <<"nbTours="<<pt->getNbTours()<<endl;
 
 	int i=0;
 	while( i < 50)

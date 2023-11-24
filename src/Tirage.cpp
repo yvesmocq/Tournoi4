@@ -324,6 +324,8 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 	bool flagok = false;
 	const bool flagcout=false;
 
+	flagNouveauTour = true;
+
 	vector<Match *> newmatch;
 
 	for( int i= 0 ;  !flagok && i < 1 ; i++ )
@@ -355,7 +357,7 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 			}
 		}
 
-		getPersSortNum(vp,Personne::PersonneLess );
+		getPersSortNum(vp,Personne::PersonneLess, Personne::stIsPres );
 
 
 //		cerr << "mttrace3"<<endl;
@@ -406,34 +408,36 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 }
 
 // il s'agit de la validation definitve du match on met à jour l'objet Personne
-int Tirage::addMatch(Match *m)
+void Tirage::addMatch(Match *m)
 {
+
 	int nbzero=0;
-	int rang=0;
+
+	if ( flagNouveauTour )
+	{
+		allTours.push_back(vector<Match *>());
+		flagNouveauTour = false;
+	}
+
+
 	for ( auto p: m->getPersonnes() )
 	{
 		if ( p->id_pers == 0 )
 			nbzero++;
 		if ( nbzero > 1)
 			break;
-		int r = p->addMatch(m);
-		rang = max(r, rang);
-	}
-	if ( rang > (int)allTours.size() )
-	{
-		allTours.push_back(vector<Match *>());
+		p->addMatch(m);
 	}
 	allTours.back().push_back(m);
 	allMatches.push_back(m);
 	if ( !m->istittable() )
 	{
-		for ( Mask<> mask:m->get3())
+		for ( const Mask<> & mask:m->get3())
 		{
 			mask_3set.insert(mask);
 		}
 	}
 	m->setNumTour(allTours.size()-1);
-	return rang;
 }
 bool Tirage::isGood3(array<int,4> arr, int nb ) const
 {
@@ -615,9 +619,10 @@ void Tirage::getPersSortNum( vector<Personne *> &result, function<bool(Personne 
 	result.clear();
 	for ( int i = 1 ; i < (int)allPersonnes.size() ; i++ )
 	{
-		if ( filtre(allPersonnes[i]) )
+		Personne *p=allPersonnes[i];
+		if ( p != nullptr && filtre(p) )
 		{
-			result.push_back(allPersonnes[i]);
+			result.push_back(p);
 		}
 	}
 	sort(result.begin(),result.end(),fct);

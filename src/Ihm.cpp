@@ -329,9 +329,9 @@ void Ihm::tournoi() {
 		affResult();
 	}
 	if (nt == 0) {
-		pt->getPersSortNum(vp, Personne::PNameLess);
+		pt->getPersSortNum(vp, Personne::PNameLess, Personne::stIsPres);
 	} else {
-		pt->getPersSortNum(vp, Personne::PersonneMore);
+		pt->getPersSortNum(vp, Personne::PersonneMore, Personne::stIsPres);
 	}
 	lister(vp);
 	vector<Personne*> exvol;
@@ -599,9 +599,22 @@ string Ihm::mkLigne(const Personne *p, int nc_result, int nc_dep) const {
 	ss << "| " << this->toStr(p) << " | ";
 	ss << toStrName(p, Tirage::getInstance()->getMaxNameAffLength()) << " |";
 
+	int i = 0;
 	for (Match *m : p->getMatches()) {
+		while ( i < m->getNumTour() )
+		{
+			ss << "            |";
+			i++;
+		}
 		ss << toStr(m, p);
 		ss << "|";
+		i++;
+	}
+	Tirage *pt=Tirage::getInstance();
+	while( i < pt->getNbTours() )
+	{
+		ss << "            |";
+		i++;
 	}
 	ss << " ";
 
@@ -689,7 +702,7 @@ void Ihm::affResult() const {
 	}
 
 	vector<Personne*> vp;
-	pt->getPersSortNum(vp, Personne::PMoreDepartage);
+	pt->getPersSortNum(vp, Personne::PMoreDepartage, Personne::stIsMatches);
 
 //	sort(vp.begin(), vp.end(), Personne::PersonneMore );
 //

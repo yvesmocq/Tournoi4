@@ -1,5 +1,6 @@
 *.exe
 *.cproject
 *.project
+*.dt4
 .settings/
 Debug/src/

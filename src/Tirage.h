@@ -42,6 +42,8 @@ private:
 	list<Match *> allMatches;
 	vector<vector<Match*>> allTours;
 
+	bool flagNouveauTour;
+
 	int maxNameAffLength;
 
 	int nbPersonnes;
@@ -80,7 +82,7 @@ public:
 	bool makeTirage(bool fl2=false, const vector<Personne *> *vtt=nullptr);
 	void deletePersonne(const Personne *p);
 	void addPersonne(Personne *p);
-	int addMatch(Match *m);
+	void addMatch(Match *m);
 	const vector<Match *> &getLastTour() const;
 	const vector<Match *> &getTour(int n) const;
 	const vector<Personne *> & getAllPersonnes() const;

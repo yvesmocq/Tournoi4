@@ -90,10 +90,15 @@ public:
 
 	bool all(){return true;};
 
-	static bool stAll( const Personne * p){return p != nullptr;}
+	static bool stAll( const Personne * p){return true;}
+	static bool stIsPres( const Personne *p){return p->isPresent();}
+	static bool stIsMatches(const Personne * p){return p->getMatches().size() != 0;}
 
 	void setPresent( bool flag);
 	bool isPresent() const;
+
+
+
 
 	int getIdProv() const;
 

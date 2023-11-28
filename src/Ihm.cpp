@@ -9,6 +9,7 @@
 #include "Tirage.h"
 #include <algorithm>
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 #include "vt100.h"
 
@@ -53,7 +54,31 @@ void Ihm::lancement() {
 }
 
 void Ihm::presence() {
-	cout << "Gestion présence" << endl;
+	cout <<endl<<endl << "Gestion présence" << endl;
+	vector<string> lib = { "Liste globale", "Liste présent", "Liste absent", "Retour au menu précédent" };
+	array<function<bool(const Personne*)>,3> filtre= {Personne::stAll, Personne::stIsPres, Personne::stIsAbs};
+	Tirage *pt = Tirage::getInstance();
+
+	bool flagcont=true;
+	while( flagcont )
+	{
+		vector<Personne*> vp;
+		int ret= getChoix(lib);
+		if ( ret >= 0 && ret < filtre.size())
+		{
+			pt->getPersSortNum(vp, Personne::PNameLess, filtre[ret]);
+			presence(vp);
+		}
+		else
+		{
+			flagcont = false;
+		}
+	}
+}
+
+void Ihm::presence( const vector<Personne *> & vp) {
+	cout <<endl<<endl << "Gestion présence" << endl;
+
 	Tirage *pt = Tirage::getInstance();
 
 
@@ -61,9 +86,7 @@ void Ihm::presence() {
 
 	string strnum;
 
-	vector<Personne*> vp;
 	while (flagcont) {
-		pt->getPersSortNum(vp, Personne::PNameLess);
 		lister(vp);
 
 		getLib("Numéro de la personne dont on modifie la présence : ", strnum);
@@ -79,6 +102,8 @@ void Ihm::presence() {
 			if ( confirm(lib) )
 			{
 				p->setPresent(!etat);
+				pt->save();
+
 			}
 
 		}
@@ -93,7 +118,9 @@ void Ihm::presence() {
 
 void Ihm::gesPersonne() {
 	vector<string> lib = { "Ajout d'une personne",
-			"Modification d'une personne", "Suppression d'une personne",
+			"Modification d'une personne",
+			"Suppression d'une personne",
+			"Gestion présence à l'ajout",
 			"Retour au menu principal" };
 	Tirage *pt = Tirage::getInstance();
 
@@ -114,6 +141,9 @@ void Ihm::gesPersonne() {
 			suppPersonne(vp);
 			break;
 		case 3:
+			gesPresenceAjout();
+			break;
+		case 4:
 			flagcont = false;
 			break;
 		default:
@@ -123,6 +153,29 @@ void Ihm::gesPersonne() {
 	}
 
 }
+
+void Ihm::gesPresenceAjout()
+{
+	cout << "Gestion présence à l'ajout" << endl;
+	Tirage *pt=Tirage::getInstance();
+
+	bool etat = pt->isPresAjout();
+
+	vector<string> lib={"Absent","Présent"};
+
+
+	cout << "Par défaut à l'ajout un joueur est "<< lib[int(etat)]<<endl;
+
+	if ( confirm("Voulez-vous changer ?") )
+	{
+		etat = !etat;
+		pt->setPresAjout(etat);
+		cout << "Par défaut à l'ajout un joueur est "<< lib[etat]<<endl;
+		retCont();
+	}
+
+}
+
 void Ihm::ajoutPersonne() {
 	string nom;
 
@@ -136,7 +189,9 @@ void Ihm::ajoutPersonne() {
 			+ string("XXX");
 	if (confirm(libconf)) {
 		Tirage *pt = Tirage::getInstance();
-		pt->addPersonne(new Personne(nom));
+		Personne *p = new Personne(nom);
+		p->setPresent(pt->isPresAjout());
+		pt->addPersonne(p);
 		pt->save();
 
 		cout << "la personne : XXX" << nom << "XXX a bien été ajoutée" << endl;
@@ -373,7 +428,11 @@ void Ihm::tournoi() {
 }
 void Ihm::affMatch(const Match *m) const {
 	if (!m->isResultInit()) {
-		cout << set_bold(true);
+		cout << set_bold(true) << set_colors(VT_YELLOW, VT_DEFAULT);
+	}
+	else
+	{
+		cout << set_colors(VT_GREEN, VT_DEFAULT);
 	}
 	char str[4] = "A. ";
 	int im = 0;
@@ -397,6 +456,8 @@ void Ihm::affMatch(const Match *m) const {
 	if (!m->isResultInit()) {
 		cout << set_bold(false);
 	}
+
+	cout <<set_colors(VT_DEFAULT,VT_DEFAULT);
 
 	cout << endl;
 	cout << endl;
@@ -726,3 +787,5 @@ void Ihm::affResult() const {
 	cout << endl << endl << endl;
 
 }
+
+

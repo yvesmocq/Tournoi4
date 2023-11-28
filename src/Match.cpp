@@ -149,6 +149,7 @@ FlatMatch Match::getFlat() const
 	fm.resultInit = this->resultInit;
 	fm.pers = this->pers;
 	fm.result = this->result;
+	fm.numTour = this->numTour;
 	return fm;
 }
 

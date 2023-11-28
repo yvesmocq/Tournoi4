@@ -92,6 +92,7 @@ public:
 
 	static bool stAll( const Personne * p){return true;}
 	static bool stIsPres( const Personne *p){return p->isPresent();}
+	static bool stIsAbs( const Personne *p){return !p->isPresent();}
 	static bool stIsMatches(const Personne * p){return p->getMatches().size() != 0;}
 
 	void setPresent( bool flag);

@@ -21,7 +21,8 @@ using namespace std;
 //
 Tirage * Tirage::instance=nullptr;
 
-Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax), maxNameAffLength(0), nbPersonnes(0), nomFichierAdd(""), maxIndice(0),nbTentatives(0)  {
+Tirage::Tirage():allPersonnes(Tools::getInstance()->sizeMax),flagNouveauTour(false),flagPresAjout(false),
+		maxNameAffLength(0), nbPersonnes(0), nomFichierAdd(""), maxIndice(0),nbTentatives(0)  {
 	Personne::resetSerieId();
 }
 
@@ -55,6 +56,7 @@ void Tirage::initInstance()
 void Tirage::initInstance( const FlatTirage &ft)
 {
 	initInstance();
+	flagPresAjout = ft.flagPresAjout;
 	for( const FlatPers & fp:ft.allPers)
 	{
 		if ( fp.isValid )
@@ -66,14 +68,22 @@ void Tirage::initInstance( const FlatTirage &ft)
 		}
 	}
 	nbPersonnes--; // pour ne pas prendre en compte l'id 0
+
+	int nm=-1;
 	for( const FlatMatch &fm:ft.allMatches )
 	{
 		if ( fm.isValid)
 		{
 			Match *m = new Match(convArray(fm.pers));
+			m->setNumTour(fm.numTour);
 			if ( fm.resultInit )
 			{
 				m->setResult(fm.result);
+			}
+			if ( nm != m->getNumTour() )
+			{
+				this->flagNouveauTour = true;
+				nm = m->getNumTour();
 			}
 			addMatch(m);
 		}
@@ -551,6 +561,7 @@ FlatTirage Tirage::getFlat() const
 	{
 		ft.allMatches[i_match++] = m->getFlat();
 	}
+	ft.flagPresAjout = flagPresAjout;
 	return ft;
 }
 array<Personne *,4> Tirage::convArray(array<int,4> arr) const
@@ -578,6 +589,12 @@ void Tirage::save(const string & nomfic, bool flag_plus) const
 
 	FlatTirage ft = getFlat();
 	FILE *fd = fopen(nomfic.c_str(), "wb+");
+
+	if ( fd == NULL )
+	{
+		cout << "Erreur ouverture fichier XXX"<<nomfic<<"XXX errno="<<errno<<endl;
+		return;
+	}
 
 	fwrite(&ft,sizeof(FlatTirage), 1, fd);
 
@@ -658,4 +675,11 @@ bool Tirage::isRerenc() const
 	const array<int,6> tab={0,15,24,36,60,10000};
 	return nbPersonnes <= tab[min(tab.size()-1,allTours.size())];
 }
-
+bool Tirage::isPresAjout() const
+{
+	return flagPresAjout;
+}
+void Tirage::setPresAjout( bool fl)
+{
+	flagPresAjout = fl;
+}

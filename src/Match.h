@@ -19,7 +19,8 @@ struct FlatMatch
 {
 	bool isValid;
 	bool resultInit;
-	char filler[6];
+	char filler[2];
+	int numTour;
 	array<int,4> pers;
 	array<int,4> result;
 };

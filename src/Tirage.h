@@ -20,6 +20,8 @@
 
 struct FlatTirage
 {
+	bool flagPresAjout;
+	char filler[31];
 	array<FlatPers,Tools::sizeMax> allPers;
 	array<FlatMatch,Tools::matchMax> allMatches;
 };
@@ -43,6 +45,7 @@ private:
 	vector<vector<Match*>> allTours;
 
 	bool flagNouveauTour;
+	bool flagPresAjout;
 
 	int maxNameAffLength;
 
@@ -109,6 +112,9 @@ public:
 	void save(bool flag_plus=false) const;
 
 	bool isRerenc() const;
+
+	bool isPresAjout() const;
+	void setPresAjout( bool fl);
 
 };
 

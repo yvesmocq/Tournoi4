@@ -35,7 +35,9 @@ public:
 	void ajoutPersonne();
 	void modifPersonne(const vector<Personne *> & vp);
 	void suppPersonne(const vector<Personne *> & vp);
+	void gesPresenceAjout();
 	void presence();
+	void presence( const vector<Personne *> &vp);
 	bool confirm(const string &lib );
 	string getStrTour(int n ) const;
 	void retCont() const;

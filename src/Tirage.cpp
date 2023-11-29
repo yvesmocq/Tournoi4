@@ -491,6 +491,11 @@ void Tirage::initMaxNameAffLength()
 	}
 
 }
+void Tirage::modifPersonne(const Personne * p)
+{
+	maxNameAffLength = max(maxNameAffLength, p->getAffLength());
+}
+
 int Tirage::getMaxNameAffLength() const
 {
 	return maxNameAffLength;

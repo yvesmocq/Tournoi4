@@ -221,6 +221,7 @@ void Ihm::modifPersonne(const vector<Personne*> &vp) {
 		if (confirm(libconf)) {
 			Tirage *pt = Tirage::getInstance();
 			p->setName(nouveaunom);
+			pt->modifPersonne(p);
 			pt->save();
 			cout << "la personne : XXX" << nouveaunom
 					<< "XXX a bien été moifiée (ancien nom : XXX" << nom

@@ -84,6 +84,7 @@ public:
 
 	bool makeTirage(bool fl2=false, const vector<Personne *> *vtt=nullptr);
 	void deletePersonne(const Personne *p);
+	void modifPersonne(const Personne *p);
 	void addPersonne(Personne *p);
 	void addMatch(Match *m);
 	const vector<Match *> &getLastTour() const;

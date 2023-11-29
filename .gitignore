@@ -1,3 +1,4 @@
+*.stackdump
 *.exe
 *.cproject
 *.project

@@ -44,15 +44,19 @@ public:
 	void getLib(const string & out, string &result) const;
 	void saisieResultats();
 	void afficheMatches();
-	void affMatch( const Match *m) const;
+	void affMatch( const Match *m, string table="") const;
 
 	vector<int> getList(const string & str) const;
 	void saisieExvol( const vector<Personne *> & vp, vector<Personne *> &exvol) const;
 
 
 	void tournoi();
-
+	string strTable(int ind) const;
 	void lister(const vector<Personne *> &s) const;
+	void lister(const vector<Match *> &vm) const;
+	void lister(const vector<Personne*> &s, function<void(const Personne *)> fct) const;
+	static void affPers( const Personne *p);
+	static void affPersTable(const Personne *p);
 	string nameSize( const Personne *p) const;
 	string toStr( const Personne *p) const;
 	string toStrName(const Personne *p, int lg) const;

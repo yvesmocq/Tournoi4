@@ -73,12 +73,14 @@ private:
 	};
 
 
+
 public:
 
 	const int id_pers;
 
 	static int getSerieId();
 
+	string club() const;
 
 
 
@@ -94,6 +96,9 @@ public:
 	static bool stIsPres( const Personne *p){return p->isPresent();}
 	static bool stIsAbs( const Personne *p){return !p->isPresent();}
 	static bool stIsMatches(const Personne * p){return p->getMatches().size() != 0;}
+
+
+	bool isSameClub(const Personne * p) const;
 
 	void setPresent( bool flag);
 	bool isPresent() const;

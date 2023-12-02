@@ -328,6 +328,26 @@ bool Tirage::rec_appar4( vector<Personne *> &vp, const array<int,3> & dec, vecto
 	}
 }
 
+int Tirage::nb3SameClub( const vector<Match *> &vm) const
+{
+	int nb=0;
+	for ( Match *m:vm )
+	{
+		m->is3sameClub() && nb++;
+	}
+	return nb;
+}
+
+int Tirage::getNote(const vector<Match *> &vm) const
+{
+	int res = 0;
+	for ( const Match *m:vm)
+	{
+		res += m->nbClub();
+	}
+	return (vm.size()-nb3SameClub(vm))*vm.size()*4 + res;
+}
+
 bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 {
 //cerr << "mttrace1"<<endl;
@@ -338,9 +358,13 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 
 	vector<Match *> newmatch;
 
-	for( int i= 0 ;  !flagok && i < 1 ; i++ )
-	{
+	int noteMax = -1;
+	vector<Match *> newmatchSel;
 
+	for( int i= 0 ;  i < 2000 ; i++ )
+	{
+		flagok = false;
+		newmatch.clear();
 //		cerr << "mttrace2"<<endl;
 		vector<Personne *> vp;
 
@@ -394,15 +418,27 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)
 			if ( nbTentatives >= borneTentatives )
 			{
 				flagcout && cout <<"nbTentative = "<<nbTentatives <<endl;
-				return false;
+				break;
 
 			}
 		}
 		flagcout && cout <<"MaxIndice="<<maxIndice<<endl;
 
+		if ( flagok )
+		{
+			int note=getNote(newmatch);
+
+			if ( flagok && note > noteMax )
+			{
+				noteMax = note;
+				newmatchSel = newmatch;
+			}
+		}
 	}
 	if ( !flagok )
 		return false;
+
+	newmatch = newmatchSel;
 
 //	allTours.push_back(newmatch);
 // allTour est maintenant géré dans addMatch

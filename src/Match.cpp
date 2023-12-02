@@ -152,6 +152,35 @@ FlatMatch Match::getFlat() const
 	fm.numTour = this->numTour;
 	return fm;
 }
+bool Match::is3sameClub() const
+{
+	int nbSame=0;
+	for ( const Personne *p1:personnes)
+	{
+		if ( p1 == nullptr || p1->id_pers == 0 )
+			return false;
+		for ( const Personne *p2:personnes)
+		{
+			p1->isSameClub(p2) && nbSame++;
+		}
+	}
+	return nbSame >= 9;
+
+}
+int Match::nbClub() const
+{
+	set<string> sc;
+
+	for ( const Personne *p:personnes)
+	{
+		if ( p == nullptr || p->id_pers == 0 )
+			return 0;
+		sc.insert(p->club());
+	}
+	return sc.size();
+
+
+}
 
 
 

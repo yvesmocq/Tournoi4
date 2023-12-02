@@ -71,6 +71,13 @@ int main(int ac, const char *av[] ) {
 			indarg++;
 			break;
 		}
+		if ( string(av[indarg]) == "matches" )
+		{
+			Tirage::getInstance("svt4.dt4");
+			Ihm::getInstance()->afficheMatches();
+			exit(0);
+
+		}
 		if ( string(av[indarg]) == "result")
 		{
 			Tirage::getInstance("svt4.dt4");
@@ -110,6 +117,21 @@ int main(int ac, const char *av[] ) {
 		{
 			pt->setNomFichierAdd(rep_save+"/svt4.dt4");
 		}
+
+		FILE *fd= fopen("sem.sem","r");
+		if ( fd != NULL )
+		{
+			cout << "Erreur programme deja lancer !!" <<endl;
+			exit(0);
+		}
+		fd = fopen("sem.sem","w+");
+		if ( fd == NULL )
+		{
+			cout <<"Erreur création fichier sem.sem"<<endl;
+			exit(-1);
+		}
+		fclose(fd);
+
 		p_ihm->lancement();
 
 //		cout << "trace1" <<endl;

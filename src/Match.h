@@ -11,6 +11,7 @@ using namespace std;
 #include <array>
 #include <sstream>
 #include <string>
+#include <set>
 #include "Personne.h"
 
 class Personne;
@@ -73,6 +74,9 @@ public:
 	FlatMatch getFlat() const;
 
 	static const M_More MatchMore;
+
+	bool is3sameClub() const;
+	int nbClub() const;
 
 };
 

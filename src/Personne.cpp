@@ -135,6 +135,15 @@ int Personne::getDepartage() const
 	return departage;
 }
 
+string Personne::club() const
+{
+	return name.substr(min(name.rfind("("),name.length()));
+}
+//public
+bool Personne::isSameClub( const Personne * p) const
+{
+	return club() == p->club();
+}
 void Personne::mkMaskMatch() {
 	this->maskMatch1.reset();
 	this->maskMatch2.reset();

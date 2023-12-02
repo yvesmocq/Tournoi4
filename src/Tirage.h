@@ -117,6 +117,10 @@ public:
 	bool isPresAjout() const;
 	void setPresAjout( bool fl);
 
+	int nb3SameClub( const vector<Match *> &vm) const;
+
+	int getNote(const vector<Match *> &vm) const;
+
 };
 
 #endif /* TIRAGE_H_ */

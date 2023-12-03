@@ -56,11 +56,20 @@ bool test_all()
 	return true;
 }
 
+void signal_handler(int sig)
+{
+	system("rm sem.sem");
+	signal(SIGINT, SIG_DFL);
+	raise(SIGINT);
+}
+
 int main(int ac, const char *av[] ) {
 	// bool flag_test=false;
 	bool flag_test=false;
 	bool flag_save=false;
 	string rep_save;
+
+
 
 	int indarg=1;
 	while( indarg < ac )
@@ -111,6 +120,7 @@ int main(int ac, const char *av[] ) {
 	}
 	else
 	{
+
 		Ihm *p_ihm = Ihm::getInstance();
 		Tirage *pt = Tirage::getInstance("svt4.dt4");
 		if ( flag_save )
@@ -121,7 +131,7 @@ int main(int ac, const char *av[] ) {
 		FILE *fd= fopen("sem.sem","r");
 		if ( fd != NULL )
 		{
-			cout << "Erreur programme deja lancer !!" <<endl;
+			cout << "Erreur programme deja lancé !!" <<endl;
 			exit(0);
 		}
 		fd = fopen("sem.sem","w+");
@@ -131,6 +141,8 @@ int main(int ac, const char *av[] ) {
 			exit(-1);
 		}
 		fclose(fd);
+
+		signal(SIGINT,signal_handler);
 
 		p_ihm->lancement();
 

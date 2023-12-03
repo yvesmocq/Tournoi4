@@ -181,7 +181,9 @@ static int  bg_c = VT_DEFAULT;
 #define set_u( u ) ((is_u = u) ? "\33[4m" : "")
 #define set_r( r ) ((is_r = r) ? "\33[7m" : "")
 
-#define set_colors( fg, bg ) "\33[3" << (fg_c = fg) << ";4" << (bg_c = bg) << "m"
+// #define set_colors( fg, bg ) "\33[3" << (fg_c = fg) << ";4" << (bg_c = bg) << "m"
+
+#define set_colors( fg, bg ) "\33[3" << fg << ";4" << bg << "m"
 
 #define set_attributes( b, i, u, r ) set_b( b ) << set_i( i ) << set_u( u ) << set_r( r ) << set_colors( fg_c, bg_c )
 

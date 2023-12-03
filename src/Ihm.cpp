@@ -64,7 +64,7 @@ void Ihm::presence() {
 	{
 		vector<Personne*> vp;
 		int ret= getChoix(lib);
-		if ( ret >= 0 && ret < filtre.size())
+		if ( ret >= 0 && ret < (int)filtre.size())
 		{
 			pt->getPersSortNum(vp, Personne::PNameLess, filtre[ret]);
 			presence(vp);
@@ -318,6 +318,8 @@ void Ihm::lister(const vector<Match *> &vm) const
 
 }
 
+
+
 //static
 void Ihm::affPersTable(const Personne *p)
 {
@@ -325,7 +327,8 @@ void Ihm::affPersTable(const Personne *p)
 
 	string str=pihm->nameSize(p)+" ";
 
-	int pos = str.rfind(")");
+	int pos = str.find_last_not_of(" ");
+//	cerr <<"pos="<<pos<<endl;
 
 	str.insert(pos+2, pihm->strTable(p->getIdProv()));
 
@@ -340,6 +343,7 @@ void Ihm::lister(const vector<Personne*> &s, function<void(const Personne *)> fc
 	int ind = 0;
 
 	for (int ligne = 0; ligne < nbLigne; ligne++) {
+		cout <<"    ";
 		ind = ligne;
 		for (int col = 0; col < nbColonne && ind < (int) s.size(); col++) {
 			fct(s[ind]);
@@ -472,9 +476,10 @@ void Ihm::tournoi() {
 
 	}
 }
+
 void Ihm::affMatch(const Match *m, string table) const {
 	if (!m->isResultInit()) {
-		cout << set_bold(true) << set_colors(VT_YELLOW, VT_DEFAULT);
+		cout << set_bold(true) << set_colors(VT_DEFAULT, VT_DEFAULT);
 	}
 	else
 	{
@@ -490,14 +495,14 @@ void Ihm::affMatch(const Match *m, string table) const {
 		} else {
 			cout << " ";
 		}
-		cout << " " <<nameSize(p);
+		string s = nameSize(p)+" ";
 		if (p->getResult() < 0)
-			cout << "   ";
+			s += "   ";
 		else
-			cout << "(" << p->getResult() << ")";
-		cout <<" ";
+			s.insert(s.find_last_not_of(" ")+2,"("+to_string(int(p->getResult()))+")" );
 		if (p->getResult() < 10)
 			cout << " ";
+		cout << s;
 		str[0]++;
 		im++;
 	}
@@ -528,7 +533,7 @@ void Ihm::afficheMatches() {
 	cout << endl << endl;
 	cout <<endl;
 	cout << endl << endl;
-	cout << "Matches du tour N° "<< pt->getNbTours() <<" :"<<endl;
+	cout << "              Tour N° "<< pt->getNbTours() <<" :"<<endl<<endl;
 	const vector<Match*> &matches = pt->getLastTour();
 
 	lister(matches);

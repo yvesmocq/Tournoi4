@@ -146,6 +146,8 @@ int main(int ac, const char *av[] ) {
 
 		p_ihm->lancement();
 
+		system("rm sem.sem");
+
 //		cout << "trace1" <<endl;
 //		Simu *simu=Simu::getInstance(16);
 //		cout << "trace2" <<endl;

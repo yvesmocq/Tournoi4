@@ -495,13 +495,13 @@ void Ihm::affMatch(const Match *m, string table) const {
 		} else {
 			cout << " ";
 		}
-		string s = nameSize(p)+" ";
+		string s = " "+nameSize(p)+" ";
 		if (p->getResult() < 0)
 			s += "   ";
 		else
 			s.insert(s.find_last_not_of(" ")+2,"("+to_string(int(p->getResult()))+")" );
 		if (p->getResult() < 10)
-			cout << " ";
+			s += " ";
 		cout << s;
 		str[0]++;
 		im++;
@@ -541,13 +541,18 @@ void Ihm::afficheMatches() {
 	int ind = 1;
 	cout << endl << endl;
 	for (Match *m : matches) {
-		cout << ind << ". ";
+
+		cout << "   "<< ind << ". ";
 		if ( m->istittable()) ind = -1;
 		affMatch(m, strTable(ind));
 		ind++;
 	}
 
+	cout <<endl<<endl;
+
 	cout << "nb match 3 meme club = "<<pt->nb3SameClub(pt->getLastTour())<<endl;
+
+	cout <<endl<<endl;
 
 
 }
@@ -574,7 +579,9 @@ void Ihm::saisieResultats() {
 		int num = atoi(rep.c_str());
 		if (num >= 1 && num <= (int) matches.size()) {
 			Match *m = matches[num - 1];
+			cout <<endl<<endl<<"   ";
 			affMatch(m);
+			cout <<endl<<endl;
 			if (!m->isResultInit()
 					|| confirm(
 							"Confirmez-vous la modification des résultats de ce match ? ")) {
@@ -611,6 +618,7 @@ void Ihm::saisieResultats() {
 					}
 					flagok = true;
 				} else {
+					cout <<endl;
 					getLib(
 							"Donnez le résultat (une lettre suivi d'un 0 ou un 3) :",
 							rep);
@@ -650,6 +658,10 @@ void Ihm::saisieResultats() {
 					int v1 = rand()%2 == 0 ? 3 : 0;
 					int v2 = v1 == 3 ? 1 : 2;
 					int num = rand()%4;
+					if ( pers[0]->id_pers == 0)
+					{
+						v1 = v2 = 2;
+					}
 					for ( int i =0 ; i < 4 ; i++)
 					{
 						if ( pers[i] != nullptr && pers[i]->id_pers != 0)
@@ -802,11 +814,16 @@ string Ihm::toStr(const Match *m, const Personne *p) const {
 	int n = m->getScore(p);
 //	cerr << "t0211"<<endl;
 
+
 	array<int, 4> pers = m->getPersId();
 	array<int, 4> result = m->getResult();
 	array<Personne*, 4> personnes = m->getPersonnes();
 //	cerr << "t0212"<<endl;
 
+	if ( pers[0] == 0 )
+	{
+		return " "+to_string(n)+" Ex       ";
+	}
 	array<int, 3> ar={};
 
 	int ind_ar = (n == 1 && pers[0] != 0) ? 1 : 0;

@@ -166,6 +166,12 @@
 #define insert_char( count ) "\33[" << count << "@"
 #define delete_char( count ) "\33[" << count << "P"
 
+
+#define set_d3() "\33#3"
+#define set_d4() "\33#4"
+#define set_dnorm() "\33#5"
+#define set_d6() "\33#6"
+
 static bool is_b = false;
 static bool is_i = false;
 static bool is_u = false;

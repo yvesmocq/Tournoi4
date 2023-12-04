@@ -671,9 +671,12 @@ void Ihm::saisieResultats() {
 					}
 					m->setResult(res);
 				}
+				pt->save(true);
+
 			}
 		}
 	}
+
 
 	retCont();
 }

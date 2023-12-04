@@ -724,3 +724,11 @@ void Tirage::setPresAjout( bool fl)
 {
 	flagPresAjout = fl;
 }
+int Tirage::getResMedian() const
+{
+	return resMedian;
+}
+void Tirage::setResMedian(int v)
+{
+	resMedian = v;
+}

@@ -897,14 +897,19 @@ void Ihm::affResult() const {
 		}
 	}
 	int nc_dep = 0;
-	for (Personne *p : pt->getAllPersonnes()) {
+	vector<Personne*> vp;
+	pt->getPersSortNum(vp, Personne::PersonneMore, Personne::stIsMatches);
+
+	pt->setResMedian(vp[vp.size()/2]->getResult());
+
+	for (Personne *p : vp) {
 		if (p != nullptr) {
 			p->calculDepartage();
 			nc_dep = max(nc_dep, tools->nbChif(p->getDepartage()));
 		}
 	}
 
-	vector<Personne*> vp;
+	vp.clear();
 	pt->getPersSortNum(vp, Personne::PMoreDepartage, Personne::stIsMatches);
 
 //	sort(vp.begin(), vp.end(), Personne::PersonneMore );

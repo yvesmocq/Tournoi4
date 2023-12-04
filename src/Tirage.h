@@ -64,6 +64,8 @@ private:
 
 	void save(const string & nomfic, bool flag_plus=false) const;
 
+	int resMedian=0;
+
 public:
 	void save(string fileName) const;
 	static Tirage *getInstance();
@@ -120,6 +122,9 @@ public:
 	int nb3SameClub( const vector<Match *> &vm) const;
 
 	int getNote(const vector<Match *> &vm) const;
+
+	int getResMedian() const;
+	void setResMedian(int v);
 
 };
 

@@ -119,13 +119,23 @@ void Personne::calculDepartage()
 	for (Match *pm : this->matches) {
 		if (pm->isResultInit() )
 		{
-			for ( const Personne *p:pm->getPersonnes() )
+			array<Personne *,4> ap=pm->getPersonnes();
+			if ( ap[0]->id_pers != 0 )
 			{
-				if ( p != this && p->id_pers != 0)
+				for ( const Personne *p: ap)
 				{
-					res += p->getResult();
+					if ( p != this && p->id_pers != 0)
+					{
+						res += p->getResult();
+					}
 				}
 			}
+			else
+			{
+				Tirage *pt=Tirage::getInstance();
+				res += 3*pt->getResMedian();
+			}
+
 		}
 	}
 	this->departage = res;

@@ -1,8 +1,25 @@
+//
+// Copyright 2023 Yves Mocquard
+//
+//This file is part of Tournoi4.
+//
+// Tournoi4 is free software: you can redistribute it and/or modify it under the
+// terms of the GNU General Public License as published by the Free Software
+// Foundation, either version 3 of the License, or (at your option) any later
+// version.
+//
+// Tournoi4 is distributed in the hope that it will be useful, but WITHOUT ANY
+// WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+// A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License along with
+// Tournoi4. If not, see <https://www.gnu.org/licenses/>. 4
+//
 /*
  * Ihm.cpp
  *
  *  Created on: 25 oct. 2023
- *      Author: Yves
+ *      Author: Yves Mocquard
  */
 
 #include "Ihm.h"
@@ -11,7 +28,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdio>
-#include "vt100.h"
+
 
 Ihm *Ihm::instance = nullptr;
 
@@ -478,11 +495,7 @@ void Ihm::tournoi() {
 }
 
 void Ihm::affMatch(const Match *m, string table) const {
-	if (!m->isResultInit()) {
-		cout << set_bold(true) << set_colors(VT_DEFAULT, VT_DEFAULT);
-	}
-	else
-	{
+	if (m->isResultInit()) {
 		cout << set_colors(VT_GREEN, VT_DEFAULT);
 	}
 	char str[4] = "A. ";
@@ -505,9 +518,6 @@ void Ihm::affMatch(const Match *m, string table) const {
 		cout << s;
 		str[0]++;
 		im++;
-	}
-	if (!m->isResultInit()) {
-		cout << set_bold(false);
 	}
 
 
@@ -935,6 +945,14 @@ void Ihm::affResult() const {
 	}
 	cout << endl << endl << endl;
 
+}
+
+// private
+string Ihm::set_colors( int fg, int bg) const
+{
+	stringstream ss;
+	ss <<"\33[3" << fg << ";4" << bg << "m";
+	return ss.str();
 }
 
 

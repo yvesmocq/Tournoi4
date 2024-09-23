@@ -10,6 +10,7 @@ On installe d'abord tout les packages par défaut.
 Ensuite on installe les packages commencant par gcc et le package git en prenant la version la plus récente.
 
 A partir d'une fenêtre cygwin pour récupérer les sources faire la commande :
+
 git clone https://github.com/yvesmocq/Tournoi4.git
 
 ensuite pour compiler il faut aller dans le repertoire source :

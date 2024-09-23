@@ -14,9 +14,9 @@ A partir d'une fenêtre cygwin pour récupérer les sources faire la commande :
 git clone https://github.com/yvesmocq/Tournoi4.git
 
 ensuite pour compiler il faut aller dans le repertoire source :
-'''
+```
 cd Tournoi4/src
-'''
+```
 On compile :
 
 gcc *.cpp -o Tournoi4.exe

@@ -42,12 +42,17 @@ ce qui peut permettre de revenir en arrière.
 A tout moment si on quitte le programme, quand on le relance on repart du même état.
 Si on veut repartir à zéro il faut effacer ou renommer le fichier svt4.dt4.
 
-Pour saisir les résultats il faut d'abord savoir qu'il y a deux possibilités soit un joueur gagne tout ses matchs soit un joueur perd tous ses matchs.
+Pour saisir les résultats il faut d'abord savoir qu'il y a deux possibilités soit un joueur gagne tout ses matchs soit un joueur perds tous ses matchs.
 On saisie donc une lettre correspondant au joueur puis 3 ou 0.
+
+Le Logiciel fera les tirage au hasard en s'arrangeant à ce que chacun joue avec des joueurs ayant à peu près le même nombre de points, et aussi en évitant dans la mesure du possible de rejouer contre les même joueurs.
+Le logiciel évite aussi dans la mesure du possible de faire jouer ensemble des joueurs de même club.
+
+Pour définir le club d'un joueur il faut le mettre à la suite du nom entre parenthèses. Le nom du club  doit faire quelques caractères (15 au maximum), et il ne peut pas y avoir plus de 16 clubs.
 
 Si le nombre de joueurs présents n'est pas divisible par 4, on a des joueurs qui ne font pas de match pour un tour.
 On saisie à la main le nombre de points qu'on leur attibue, leur donner 2 points semble une bonne valeur pour compenser le fait de ne pas avoir jouer.
-Mais c'est l'organisateur qui choisi.
+Mais c'est l'organisateur qui choisi selon des règles défini à l'avance.
 
 
 

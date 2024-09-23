@@ -37,7 +37,7 @@ Maintenant vous pouvez lancer le fichier Tournoi4 :
 ./Tournoi4
 ```
 
-Toutes les données sont dans le fichier svt4.dt4, avant et après chaque tirage une sauvegarde est faite.
+Toutes les données sont dans le fichier svt4.dt4, avant et après chaque tirage une copie de sauvegarde est faite.
 ce qui peut permettre de revenir en arrière.
 A tout moment si on quitte le programme, quand on le relance on repart du même état.
 Si on veut repartir à zéro il faut effacer ou renommer le fichier svt4.dt4.

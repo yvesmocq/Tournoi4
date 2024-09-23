@@ -14,20 +14,27 @@ A partir d'une fenêtre cygwin pour récupérer les sources faire la commande :
 git clone https://github.com/yvesmocq/Tournoi4.git
 
 ensuite pour compiler il faut aller dans le repertoire source :
+
 cd Tournoi4/src
 
 On compile :
+
 gcc *.cpp -o Tournoi4.exe
 
 L'executable est le fichier Tournoi4.exe
 
 Le mieux est de travailler dans un répertoire vierge :
+
 cd ../..
+
 mkdir tournoi
+
 cd tournoi
+
 cp ../Tournoi4/src/Tournoi4.exe .
 
 Maintenant vous pouvez lancer le fichier Tournoi4 :
+
 ./Tournoi4
 
 Toutes les données sont dans le fichier svt4.dt4, avant et après chaque tirage une sauvegarde est faite.

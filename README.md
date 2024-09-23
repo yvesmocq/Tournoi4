@@ -1,7 +1,7 @@
 Tournoi4 : Logiciel d'organisation de tournoi de tennis de table loisir.
 
 Le principe est un tournoi où à chaque tour les tables de 4 joueurs sont définies.
-Ensuite 3 matchs sur chaque table sont effectués. Chaque joueur a un point par match gagné.
+Ensuite 3 matchs en double sur chaque table sont effectués correspondant à toutes les combinaisons d'équipes possibles. Chaque joueur a un point par match gagné.
 
 Installation
 Sur un PC Windows on peut installer Cygwin.

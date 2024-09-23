@@ -137,6 +137,7 @@ public:
 	void setPresAjout( bool fl);
 
 	int nb3SameClub( const vector<Match *> &vm) const;
+	int nb4SameClub( const vector<Match *> &vm) const;
 
 	int getNote(const vector<Match *> &vm) const;
 

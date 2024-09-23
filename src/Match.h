@@ -93,6 +93,7 @@ public:
 	static const M_More MatchMore;
 
 	bool is3sameClub() const;
+	bool is4sameClub() const;
 	int nbClub() const;
 
 };

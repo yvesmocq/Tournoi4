@@ -355,6 +355,15 @@ int Tirage::nb3SameClub( const vector<Match *> &vm) const
 	}
 	return nb;
 }
+int Tirage::nb4SameClub( const vector<Match *> &vm) const
+{
+	int nb=0;
+	for ( Match *m:vm )
+	{
+		m->is4sameClub() && nb++;
+	}
+	return nb;
+}
 
 int Tirage::getNote(const vector<Match *> &vm) const
 {
@@ -363,7 +372,7 @@ int Tirage::getNote(const vector<Match *> &vm) const
 	{
 		res += m->nbClub();
 	}
-	return (vm.size()-nb3SameClub(vm))*vm.size()*4 + res;
+	return (vm.size()*4-nb3SameClub(vm)-nb4SameClub(vm)*2)*vm.size()*4 + res;
 }
 
 bool Tirage::makeTirage(bool fl2, const vector<Personne *> *vtt)

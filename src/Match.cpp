@@ -184,6 +184,21 @@ bool Match::is3sameClub() const
 	return nbSame >= 9;
 
 }
+bool Match::is4sameClub() const
+{
+	int nbSame=0;
+	for ( const Personne *p1:personnes)
+	{
+		if ( p1 == nullptr || p1->id_pers == 0 )
+			return false;
+		for ( const Personne *p2:personnes)
+		{
+			p1->isSameClub(p2) && nbSame++;
+		}
+	}
+	return nbSame >= 16;
+
+}
 int Match::nbClub() const
 {
 	set<string> sc;

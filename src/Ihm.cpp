@@ -321,7 +321,7 @@ void Ihm::affPersTable(const Personne *p) {
 	int pos = str.find_last_not_of(" ");
 //	cerr <<"pos="<<pos<<endl;
 
-	str.insert(pos + 2, pihm->strTable(p->getIdProv(),p->getIdProv_2()));
+	str.insert(pos + 2, pihm->strTable(p->getIdProv(), p->getIdProv_2()));
 
 	cout << str << " ";
 }
@@ -470,8 +470,8 @@ void Ihm::affMatch(const Match *m, string table) const {
 	char str[4] = "A. ";
 	int im = 0;
 	char str_t[8];
-	strcpy(str_t,table.data());
-	if ( str_t[0] != 'E' )
+	strcpy(str_t, table.data());
+	if (str_t[0] != 'E')
 		str_t[0] = 'A';
 	for (Personne *p : m->getPersonnes()) {
 		cout << string(str);
@@ -490,7 +490,7 @@ void Ihm::affMatch(const Match *m, string table) const {
 			s += " ";
 		cout << s;
 		str[0]++;
-		if ( str_t[0] != 'E' )
+		if (str_t[0] != 'E')
 			str_t[0]++;
 		im++;
 	}
@@ -500,19 +500,17 @@ void Ihm::affMatch(const Match *m, string table) const {
 //	cout << endl;
 }
 
-string Ihm::strTable(int ind) const
-{
-	return strTable(ind,-1);
+string Ihm::strTable(int ind) const {
+	return strTable(ind, -1);
 }
 
 string Ihm::strTable(int ind, int ind_2) const {
 	char str[30];
 	if (ind < 0)
 		sprintf(str, "Ex  ");
-	else
-	{
-		char c = ( ind_2 == -1) ? 'T' : ('A'+ind_2);
-		sprintf(str, "%c%02d ",c, ind);
+	else {
+		char c = (ind_2 == -1) ? 'T' : ('A' + ind_2);
+		sprintf(str, "%c%02d ", c, ind);
 	}
 	return string(str);
 

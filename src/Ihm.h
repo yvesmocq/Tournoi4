@@ -83,6 +83,7 @@ public:
 
 	void tournoi();
 	string strTable(int ind) const;
+	string strTable(int ind, int ind_2) const;
 	void lister(const vector<Personne *> &s) const;
 	void lister(const vector<Match *> &vm) const;
 	void lister(const vector<Personne*> &s, function<void(const Personne *)> fct) const;

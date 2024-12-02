@@ -111,6 +111,7 @@ public:
 	const vector<Personne *> & getAllPersonnes() const;
 	const list<Match *> & getAllMatches() const;
 
+	bool  isNoClub() const;
 	int nbMatchNonSaisie() const;
 	int getNbTentatives() const;
 	int getMaxIndice() const;

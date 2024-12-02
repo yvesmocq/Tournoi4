@@ -57,7 +57,7 @@ private:
 	string nameSimple;
 	list<Match*> matches; // matches ou la personne apparait
 	int id_prov;
-
+	int id_prov_2; // indice dans le match
 	bool present;
 
 	double result;
@@ -117,6 +117,8 @@ public:
 
 	bool isSameClub(const Personne * p) const;
 
+	bool isNoClub() const;
+
 	void setPresent( bool flag);
 	bool isPresent() const;
 
@@ -124,6 +126,7 @@ public:
 
 
 	int getIdProv() const;
+	int getIdProv_2() const;
 
 
 	double calculNote();
@@ -148,6 +151,7 @@ public:
 	double getNote() const;
 
 	void setId_prov(int id_prov);
+	void setId_prov_2(int id_prov_2);
 	double getResult() const;
 
 	static void resetSerieId();

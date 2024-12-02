@@ -29,6 +29,7 @@ const Match::M_More Match::MatchMore=M_More();
 
 // la creation du match ne veut pas dire sa validation
 // on ne touche pas à Personne lors de cette creation
+// on ajoute quand meme son indice dans le match
 Match::Match(array<Personne *,4> personnes ):
 resultInit(false),
 result({0,0,0,0})
@@ -61,6 +62,17 @@ bool Match::isIn(const Personne *p) const
 			return true;
 	}
 	return false;
+}
+int Match::getIndPersonne(const Personne *p) const
+{
+	int res = -1;
+	for ( int i = 0 ; i < 4 ; i++)
+	{
+		if ( pers[i] == p->id_pers)
+			return i;
+	}
+	return res;
+
 }
 
 int Match::getScore(const Personne *p, int *diff) const

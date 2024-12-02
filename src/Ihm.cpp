@@ -29,7 +29,6 @@
 #include <fstream>
 #include <cstdio>
 
-
 Ihm *Ihm::instance = nullptr;
 
 Ihm::Ihm() :
@@ -71,33 +70,28 @@ void Ihm::lancement() {
 }
 
 void Ihm::presence() {
-	cout <<endl<<endl << "Gestion présence" << endl;
+	cout << endl << endl << "Gestion présence" << endl;
 	vector<string> lib = { "Liste globale", "Liste présent", "Liste absent", "Retour au menu précédent" };
-	array<function<bool(const Personne*)>,3> filtre= {Personne::stAll, Personne::stIsPres, Personne::stIsAbs};
+	array<function<bool(const Personne*)>, 3> filtre = { Personne::stAll, Personne::stIsPres, Personne::stIsAbs };
 	Tirage *pt = Tirage::getInstance();
 
-	bool flagcont=true;
-	while( flagcont )
-	{
+	bool flagcont = true;
+	while (flagcont) {
 		vector<Personne*> vp;
-		int ret= getChoix(lib);
-		if ( ret >= 0 && ret < (int)filtre.size())
-		{
+		int ret = getChoix(lib);
+		if (ret >= 0 && ret < (int) filtre.size()) {
 			pt->getPersSortNum(vp, Personne::PNameLess, filtre[ret]);
 			presence(vp);
-		}
-		else
-		{
+		} else {
 			flagcont = false;
 		}
 	}
 }
 
-void Ihm::presence( const vector<Personne *> & vp) {
-	cout <<endl<<endl << "Gestion présence" << endl;
+void Ihm::presence(const vector<Personne*> &vp) {
+	cout << endl << endl << "Gestion présence" << endl;
 
 	Tirage *pt = Tirage::getInstance();
-
 
 	bool flagcont = true;
 
@@ -109,36 +103,29 @@ void Ihm::presence( const vector<Personne *> & vp) {
 		getLib("Numéro de la personne dont on modifie la présence : ", strnum);
 		int num = atoi(strnum.c_str());
 		if (num > 0 && num <= (int) vp.size()) {
-			Personne *p=vp[num-1];
-			bool etat=p->isPresent();
+			Personne *p = vp[num - 1];
+			bool etat = p->isPresent();
 			string lib;
-			if ( etat )
-				lib="Confirmez-vous l'absence XXX"+p->getName()+"XXX";
+			if (etat)
+				lib = "Confirmez-vous l'absence XXX" + p->getName() + "XXX";
 			else
-				lib="Confirmez-vous la présence de XXX"+p->getName()+"XXX";
-			if ( confirm(lib) )
-			{
+				lib = "Confirmez-vous la présence de XXX" + p->getName() + "XXX";
+			if (confirm(lib)) {
 				p->setPresent(!etat);
 				pt->save();
 
 			}
 
-		}
-		else
-		{
+		} else {
 			flagcont = false;
 		}
 	}
 
 }
 
-
 void Ihm::gesPersonne() {
-	vector<string> lib = { "Ajout d'une personne",
-			"Modification d'une personne",
-			"Suppression d'une personne",
-			"Gestion présence à l'ajout",
-			"Retour au menu principal" };
+	vector<string> lib = { "Ajout d'une personne", "Modification d'une personne", "Suppression d'une personne",
+			"Gestion présence à l'ajout", "Retour au menu principal" };
 	Tirage *pt = Tirage::getInstance();
 
 	bool flagcont = true;
@@ -171,23 +158,20 @@ void Ihm::gesPersonne() {
 
 }
 
-void Ihm::gesPresenceAjout()
-{
+void Ihm::gesPresenceAjout() {
 	cout << "Gestion présence à l'ajout" << endl;
-	Tirage *pt=Tirage::getInstance();
+	Tirage *pt = Tirage::getInstance();
 
 	bool etat = pt->isPresAjout();
 
-	vector<string> lib={"Absent","Présent"};
+	vector<string> lib = { "Absent", "Présent" };
 
+	cout << "Par défaut à l'ajout un joueur est " << lib[int(etat)] << endl;
 
-	cout << "Par défaut à l'ajout un joueur est "<< lib[int(etat)]<<endl;
-
-	if ( confirm("Voulez-vous changer ?") )
-	{
+	if (confirm("Voulez-vous changer ?")) {
 		etat = !etat;
 		pt->setPresAjout(etat);
-		cout << "Par défaut à l'ajout un joueur est "<< lib[etat]<<endl;
+		cout << "Par défaut à l'ajout un joueur est " << lib[etat] << endl;
 		retCont();
 	}
 
@@ -202,8 +186,7 @@ void Ihm::ajoutPersonne() {
 		nom = nom.substr(0, (Tools::sizeNameMax - 1));
 		cout << "Attention le nom a été racourci" << endl;
 	}
-	string libconf = "Confirmez vous l'ajout de la personne XXX" + nom
-			+ string("XXX");
+	string libconf = "Confirmez vous l'ajout de la personne XXX" + nom + string("XXX");
 	if (confirm(libconf)) {
 		Tirage *pt = Tirage::getInstance();
 		Personne *p = new Personne(nom);
@@ -225,24 +208,22 @@ void Ihm::modifPersonne(const vector<Personne*> &vp) {
 		Personne *p = vp[num - 1];
 		string nouveaunom;
 		string nom = p->getName();
-		const string libmod = string("Nouveau nom de la personne XXX") + nom
-				+ string("XXX : ");
+		const string libmod = string("Nouveau nom de la personne XXX") + nom + string("XXX : ");
 		getLib(libmod, nouveaunom);
 		if (nom.length() > (Tools::sizeNameMax - 1)) {
 			nom = nom.substr(0, (Tools::sizeNameMax - 1));
 			cout << "Attention le nom a été racourci" << endl;
 		}
-		string libconf = "Confirmez vous la modification de la personne XXX"
-				+ nom + string("XXX ---> XXX") + nouveaunom + string("XXX");
+		string libconf = "Confirmez vous la modification de la personne XXX" + nom + string("XXX ---> XXX") + nouveaunom
+				+ string("XXX");
 
 		if (confirm(libconf)) {
 			Tirage *pt = Tirage::getInstance();
 			p->setName(nouveaunom);
 			pt->modifPersonne(p);
 			pt->save();
-			cout << "la personne : XXX" << nouveaunom
-					<< "XXX a bien été moifiée (ancien nom : XXX" << nom
-					<< "XXX" << endl;
+			cout << "la personne : XXX" << nouveaunom << "XXX a bien été moifiée (ancien nom : XXX" << nom << "XXX"
+					<< endl;
 			retCont();
 		}
 
@@ -257,16 +238,14 @@ void Ihm::suppPersonne(const vector<Personne*> &vp) {
 	if (num > 0 && num <= (int) vp.size()) {
 		Personne *p = vp[num - 1];
 		const string nom = p->getName();
-		string libconf = "Confirmez vous la suppression de la personne XXX"
-				+ nom + string("XXX");
+		string libconf = "Confirmez vous la suppression de la personne XXX" + nom + string("XXX");
 
 		if (confirm(libconf)) {
 			Tirage *pt = Tirage::getInstance();
 			pt->deletePersonne(p);
 			pt->save();
 
-			cout << "la personne : XXX" << nom << "XXX a bien été supprimée"
-					<< endl;
+			cout << "la personne : XXX" << nom << "XXX a bien été supprimée" << endl;
 			retCont();
 		}
 
@@ -297,62 +276,57 @@ string Ihm::nameSize(const Personne *p) const {
 	return str.substr(0, Tirage::getInstance()->getLengthAff(p) + 1);
 }
 
-string Ihm::strPres( const Personne *p) const{
+string Ihm::strPres(const Personne *p) const {
 	stringstream ss;
 
-	if ( p->isPresent())
-	{
-		ss << set_colors(VT_GREEN, VT_DEFAULT) <<"v";
+	if (p->isPresent()) {
+		ss << set_colors(VT_GREEN, VT_DEFAULT) << "v";
+	} else {
+		ss << set_colors(VT_RED, VT_DEFAULT) << "x";
 	}
-	else
-	{
-		ss << set_colors(VT_RED, VT_DEFAULT) <<"x";
-	}
-	ss <<set_colors(VT_DEFAULT,VT_DEFAULT);
+	ss << set_colors(VT_DEFAULT, VT_DEFAULT);
 
 	return ss.str();
 
 }
 
-void Ihm::lister(const vector<Match *> &vm) const
-{
-	vector<Personne *> vp;
-	int indm=1;
-	for ( Match *m:vm)
-	{
-		array<Personne *,4> pers=m->getPersonnes();
-		for ( Personne *p:  pers )
-		{
-			if (p->id_pers == 0) continue;
+void Ihm::lister(const vector<Match*> &vm) const {
+	vector<Personne*> vp;
+	int indm = 1;
+	for (Match *m : vm) {
+		array<Personne*, 4> pers = m->getPersonnes();
+		int i_pm = 0;
+		for (Personne *p : pers) {
+			if (p->id_pers == 0)
+				continue;
 			vp.push_back(p);
 			p->setId_prov(pers[0]->id_pers == 0 ? -1 : indm);
+			p->setId_prov_2(i_pm);
+			i_pm++;
 		}
 		indm++;
 	}
-	sort(vp.begin(),vp.end(),Personne::PNameLess);
+	sort(vp.begin(), vp.end(), Personne::PNameLess);
 
 	lister(vp, affPersTable);
 
 }
 
-
-
 //static
-void Ihm::affPersTable(const Personne *p)
-{
-	Ihm *pihm=Ihm::getInstance();
+void Ihm::affPersTable(const Personne *p) {
+	Ihm *pihm = Ihm::getInstance();
 
-	string str=pihm->nameSize(p)+" ";
+	string str = pihm->nameSize(p) + " ";
 
 	int pos = str.find_last_not_of(" ");
 //	cerr <<"pos="<<pos<<endl;
 
-	str.insert(pos+2, pihm->strTable(p->getIdProv()));
+	str.insert(pos + 2, pihm->strTable(p->getIdProv(),p->getIdProv_2()));
 
-	cout << str<< " ";
+	cout << str << " ";
 }
 
-void Ihm::lister(const vector<Personne*> &s, function<void(const Personne *)> fct) const {
+void Ihm::lister(const vector<Personne*> &s, function<void(const Personne*)> fct) const {
 	const int nbColonne = 4;
 	int nbLigne = (s.size() + nbColonne - 1) / nbColonne;
 	int reste = (s.size() + 3) % nbColonne + 1;
@@ -360,7 +334,7 @@ void Ihm::lister(const vector<Personne*> &s, function<void(const Personne *)> fc
 	int ind = 0;
 
 	for (int ligne = 0; ligne < nbLigne; ligne++) {
-		cout <<"    ";
+		cout << "    ";
 		ind = ligne;
 		for (int col = 0; col < nbColonne && ind < (int) s.size(); col++) {
 			fct(s[ind]);
@@ -375,16 +349,14 @@ void Ihm::lister(const vector<Personne*> &s, function<void(const Personne *)> fc
 		cout << endl;
 	}
 }
-void Ihm::lister(const vector<Personne*> &s) const
-{
+void Ihm::lister(const vector<Personne*> &s) const {
 	lister(s, affPers);
 }
 
 //static
-void Ihm::affPers( const Personne *p)
-{
-	Ihm *pihm=Ihm::getInstance();
-	cout << pihm->toStr(p) << ". " <<pihm->strPres(p)<<" . "<< pihm->nameSize(p);
+void Ihm::affPers(const Personne *p) {
+	Ihm *pihm = Ihm::getInstance();
+	cout << pihm->toStr(p) << ". " << pihm->strPres(p) << " . " << pihm->nameSize(p);
 }
 
 string Ihm::getStrTour(int n) const {
@@ -405,8 +377,7 @@ vector<int> Ihm::getList(const string &str) const {
 	free(ptrall);
 	return rep;
 }
-void Ihm::saisieExvol(const vector<Personne*> &vp,
-		vector<Personne*> &exvol) const {
+void Ihm::saisieExvol(const vector<Personne*> &vp, vector<Personne*> &exvol) const {
 	size_t b_e = vp.size() % 4;
 	bool flok = false;
 	while (!flok) {
@@ -463,13 +434,11 @@ void Ihm::tournoi() {
 		while (!flok) {
 			saisieExvol(vp, exvol);
 			if (exvol.size() != 0) {
-				cout << "Liste des exempts pour le tour n° " << (nt + 1) << " :"
-						<< endl;
+				cout << "Liste des exempts pour le tour n° " << (nt + 1) << " :" << endl;
 				for (Personne *p : exvol) {
 					cout << p->getName() << endl;
 				}
-				if (confirm(
-						"Confirmez-vous cette liste d'exempts volontaire ?")) {
+				if (confirm("Confirmez-vous cette liste d'exempts volontaire ?")) {
 					p_exvol = &exvol;
 					flok = true;
 				}
@@ -500,50 +469,62 @@ void Ihm::affMatch(const Match *m, string table) const {
 	}
 	char str[4] = "A. ";
 	int im = 0;
+	char str_t[8];
+	strcpy(str_t,table.data());
+	if ( str_t[0] != 'E' )
+		str_t[0] = 'A';
 	for (Personne *p : m->getPersonnes()) {
 		cout << string(str);
-		cout << table;
+		cout << string(str_t);
 		if (m->isResultInit() && p->id_pers != 0) {
 			cout << m->getResult()[im];
 		} else {
 			cout << " ";
 		}
-		string s = " "+nameSize(p)+" ";
+		string s = " " + nameSize(p) + " ";
 		if (p->getResult() < 0)
 			s += "   ";
 		else
-			s.insert(s.find_last_not_of(" ")+2,"("+to_string(int(p->getResult()))+")" );
+			s.insert(s.find_last_not_of(" ") + 2, "(" + to_string(int(p->getResult())) + ")");
 		if (p->getResult() < 10)
 			s += " ";
 		cout << s;
 		str[0]++;
+		if ( str_t[0] != 'E' )
+			str_t[0]++;
 		im++;
 	}
 
-
-	cout <<set_colors(VT_DEFAULT,VT_DEFAULT);
+	cout << set_colors(VT_DEFAULT, VT_DEFAULT);
 	cout << endl;
 //	cout << endl;
 }
 
 string Ihm::strTable(int ind) const
 {
+	return strTable(ind,-1);
+}
+
+string Ihm::strTable(int ind, int ind_2) const {
 	char str[30];
-	if ( ind < 0 )
-		sprintf(str,"Ex  ");
+	if (ind < 0)
+		sprintf(str, "Ex  ");
 	else
-		sprintf(str,"T%02d ",ind);
-	return  string(str);
+	{
+		char c = ( ind_2 == -1) ? 'T' : ('A'+ind_2);
+		sprintf(str, "%c%02d ",c, ind);
+	}
+	return string(str);
 
 }
 
 void Ihm::afficheMatches() {
 	Tirage *pt = Tirage::getInstance();
-	cout <<endl;
+	cout << endl;
 	cout << endl << endl;
-	cout <<endl;
+	cout << endl;
 	cout << endl << endl;
-	cout << "              Tour N° "<< pt->getNbTours() <<" :"<<endl<<endl;
+	cout << "              Tour N° " << pt->getNbTours() << " :" << endl << endl;
 	const vector<Match*> &matches = pt->getLastTour();
 
 	lister(matches);
@@ -552,22 +533,21 @@ void Ihm::afficheMatches() {
 	cout << endl << endl;
 	for (Match *m : matches) {
 
-		cout << "   "<< ind << ". ";
-		if ( m->istittable()) ind = -1;
+		cout << "   " << ind << ". ";
+		if (m->istittable())
+			ind = -1;
 		affMatch(m, strTable(ind));
 		ind++;
 	}
 
-	cout <<endl<<endl;
-
-	cout << "nb match 3 meme club = "<<pt->nb3SameClub(pt->getLastTour())<<endl;
-
-	cout <<endl<<endl;
-
+	cout << endl << endl;
+	if (!pt->isNoClub()) {
+		cout << "nb match 3 meme club = " << pt->nb3SameClub(pt->getLastTour()) << endl;
+	}
+	cout << endl << endl;
 
 }
 void Ihm::saisieResultats() {
-
 
 	Tirage *pt = Tirage::getInstance();
 	bool flagcont = true;
@@ -589,12 +569,10 @@ void Ihm::saisieResultats() {
 		int num = atoi(rep.c_str());
 		if (num >= 1 && num <= (int) matches.size()) {
 			Match *m = matches[num - 1];
-			cout <<endl<<endl<<"   ";
+			cout << endl << endl << "   ";
 			affMatch(m);
-			cout <<endl<<endl;
-			if (!m->isResultInit()
-					|| confirm(
-							"Confirmez-vous la modification des résultats de ce match ? ")) {
+			cout << endl << endl;
+			if (!m->isResultInit() || confirm("Confirmez-vous la modification des résultats de ce match ? ")) {
 				bool flagok = false;
 				array<int, 4> result = { };
 				if (m->istittable()) {
@@ -606,16 +584,12 @@ void Ihm::saisieResultats() {
 							bool nok = true;
 
 							while (nok) {
-								const string lib = string(
-										"Nombre de points pour ") + p->getName()
-										+ string("(0-3) : ");
+								const string lib = string("Nombre de points pour ") + p->getName() + string("(0-3) : ");
 								string rep;
 								getLib(lib, rep);
 								int res = atoi(rep.c_str());
 								if (res < 0 || res > 3) {
-									cout
-											<< "Erreur on attend une valeur entre 0 et 3 !!!"
-											<< endl;
+									cout << "Erreur on attend une valeur entre 0 et 3 !!!" << endl;
 									retCont();
 								} else {
 									result[i] = res;
@@ -628,10 +602,8 @@ void Ihm::saisieResultats() {
 					}
 					flagok = true;
 				} else {
-					cout <<endl;
-					getLib(
-							"Donnez le résultat (une lettre suivi d'un 0 ou un 3) :",
-							rep);
+					cout << endl;
+					getLib("Donnez le résultat (une lettre suivi d'un 0 ou un 3) :", rep);
 					char c = rep.c_str()[0];
 					int c2 = rep.length() == 2 ? atoi(rep.c_str() + 1) : -1;
 					int nump = -1;
@@ -645,8 +617,7 @@ void Ihm::saisieResultats() {
 						}
 						flagok = true;
 					} else {
-						cout << "Saisie incorrecte : XXX" << rep << "XXX"
-								<< endl;
+						cout << "Saisie incorrecte : XXX" << rep << "XXX" << endl;
 						retCont();
 					}
 				}
@@ -656,27 +627,20 @@ void Ihm::saisieResultats() {
 				}
 
 			}
-		}
-		else
-		{
-			if ( rep == "ALEA" )
-			{
-				for ( Match *m : matches )
-				{
-					array<int,4> res={0};
-					const array<Personne *,4> & pers =m->getPersonnes();
-					int v1 = rand()%2 == 0 ? 3 : 0;
+		} else {
+			if (rep == "ALEA") {
+				for (Match *m : matches) {
+					array<int, 4> res = { 0 };
+					const array<Personne*, 4> &pers = m->getPersonnes();
+					int v1 = rand() % 2 == 0 ? 3 : 0;
 					int v2 = v1 == 3 ? 1 : 2;
-					int num = rand()%4;
-					if ( pers[0]->id_pers == 0)
-					{
+					int num = rand() % 4;
+					if (pers[0]->id_pers == 0) {
 						v1 = v2 = 2;
 					}
-					for ( int i =0 ; i < 4 ; i++)
-					{
-						if ( pers[i] != nullptr && pers[i]->id_pers != 0)
-						{
-						res[i] = i==num ? v1 : v2;
+					for (int i = 0; i < 4; i++) {
+						if (pers[i] != nullptr && pers[i]->id_pers != 0) {
+							res[i] = i == num ? v1 : v2;
 						}
 					}
 					m->setResult(res);
@@ -686,7 +650,6 @@ void Ihm::saisieResultats() {
 			}
 		}
 	}
-
 
 	retCont();
 }
@@ -735,8 +698,7 @@ int Ihm::getChoixNum(string phrase, int from, int to) {
 	int res;
 	char str[20];
 	do {
-		cout << phrase << lib_repnum1 << from << lib_repnum2 << to
-				<< lib_repnum3;
+		cout << phrase << lib_repnum1 << from << lib_repnum2 << to << lib_repnum3;
 		fflush(stdout);
 		fgets(str, 10, stdout);
 		res = atoi(str);
@@ -769,7 +731,6 @@ string Ihm::toStrName(const Personne *p, int lg) const {
 	return str.substr(0, lg + p->getDiffAccent());
 }
 
-
 //string Personne::numName() const {
 //	stringstream ss;
 //
@@ -789,8 +750,7 @@ string Ihm::mkLigne(const Personne *p, int nc_result, int nc_dep) const {
 	int i = 0;
 	for (Match *m : p->getMatches()) {
 //		cerr << "t020"<<endl;
-		while ( i < m->getNumTour() )
-		{
+		while (i < m->getNumTour()) {
 			ss << "            |";
 			i++;
 		}
@@ -801,9 +761,8 @@ string Ihm::mkLigne(const Personne *p, int nc_result, int nc_dep) const {
 		i++;
 	}
 //	cerr << "t03"<<endl;
-	Tirage *pt=Tirage::getInstance();
-	while( i < pt->getNbTours() )
-	{
+	Tirage *pt = Tirage::getInstance();
+	while (i < pt->getNbTours()) {
 		ss << "            |";
 		i++;
 	}
@@ -827,17 +786,15 @@ string Ihm::toStr(const Match *m, const Personne *p) const {
 	int n = m->getScore(p);
 //	cerr << "t0211"<<endl;
 
-
 	array<int, 4> pers = m->getPersId();
 	array<int, 4> result = m->getResult();
 	array<Personne*, 4> personnes = m->getPersonnes();
 //	cerr << "t0212"<<endl;
 
-	if ( pers[0] == 0 )
-	{
-		return " "+to_string(n)+" Ex       ";
+	if (pers[0] == 0) {
+		return " " + to_string(n) + " Ex       ";
 	}
-	array<int, 3> ar={};
+	array<int, 3> ar = { };
 
 	int ind_ar = (n == 1 && pers[0] != 0) ? 1 : 0;
 
@@ -851,9 +808,7 @@ string Ihm::toStr(const Match *m, const Personne *p) const {
 			nbadv = 1;
 		else
 			nbadv = 2;
-	}
-	else
-	{
+	} else {
 //		cerr<< "tr0213 normal"<<endl;
 	}
 //	cerr << "t0214"<<endl;
@@ -910,7 +865,7 @@ void Ihm::affResult() const {
 	vector<Personne*> vp;
 	pt->getPersSortNum(vp, Personne::PersonneMore, Personne::stIsMatches);
 
-	pt->setResMedian(vp[vp.size()/2]->getResult());
+	pt->setResMedian(vp[vp.size() / 2]->getResult());
 
 	for (Personne *p : vp) {
 		if (p != nullptr) {
@@ -935,8 +890,8 @@ void Ihm::affResult() const {
 	for (int i = 0; i < pt->getNbTours(); i++) {
 		cout << "Tour N° " << toStr(i + 1, 2) << " | ";
 	}
-	cout << toStr("Res", nc_result + 1) << "| " << toStr("Dep", nc_dep + 1)
-			<< "|" <<endl;;
+	cout << toStr("Res", nc_result + 1) << "| " << toStr("Dep", nc_dep + 1) << "|" << endl;
+	;
 
 	for (const Personne *p : vp) {
 //		cerr<< "tr1 id="<<p->getIdProv()<<"name="<<p->getName() <<endl;
@@ -948,11 +903,9 @@ void Ihm::affResult() const {
 }
 
 // private
-string Ihm::set_colors( int fg, int bg) const
-{
+string Ihm::set_colors(int fg, int bg) const {
 	stringstream ss;
-	ss <<"\33[3" << fg << ";4" << bg << "m";
+	ss << "\33[3" << fg << ";4" << bg << "m";
 	return ss.str();
 }
-
 

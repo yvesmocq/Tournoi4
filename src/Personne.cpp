@@ -171,6 +171,10 @@ bool Personne::isSameClub( const Personne * p) const
 {
 	return club() == p->club();
 }
+bool Personne::isNoClub() const
+{
+	return club() == "";
+}
 void Personne::mkMaskMatch() {
 	this->maskMatch1.reset();
 	this->maskMatch2.reset();
@@ -223,6 +227,12 @@ void Personne::setId_prov(int id_prov) {
 }
 int Personne::getIdProv() const {
 	return this->id_prov;
+}
+void Personne::setId_prov_2(int id_prov_2) {
+	this->id_prov_2 = id_prov_2;
+}
+int Personne::getIdProv_2() const {
+	return this->id_prov_2;
 }
 
 

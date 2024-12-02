@@ -77,6 +77,7 @@ public:
 
 	array<int,4> getPersId() const;
 	array<Personne*,4> getPersonnes() const;
+	int getIndPersonne( const Personne *p) const;
 	bool isResultInit() const;
 	void setResult( array<int,4> res);
 	array<int,4> getResult() const;

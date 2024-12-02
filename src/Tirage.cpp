@@ -512,6 +512,18 @@ void Tirage::addMatch(Match *m)
 	}
 	m->setNumTour(allTours.size()-1);
 }
+bool Tirage::isNoClub() const
+{
+	bool res = true;
+	for ( auto p: allPersonnes )
+	{
+		if ( p != nullptr )
+		{
+			res = res & p->isNoClub();
+		}
+	}
+	return res;
+}
 bool Tirage::isGood3(array<int,4> arr, int nb ) const
 {
 	int deb = 0;

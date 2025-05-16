@@ -323,6 +323,11 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne*> *vtt) {
 	int noteMax = -1;
 	vector<Match*> newmatchSel;
 
+	bool flagNoClub = false;
+
+
+	// Si il n'y a pas de club on sort vite de la boucle
+
 	for (int i = 0; i < 2000; i++) {
 		flagok = false;
 		newmatch.clear();
@@ -343,12 +348,15 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne*> *vtt) {
 //
 //		sort(vp.begin(), vp.end(), Personne::PersonneLess);
 
+		flagNoClub = true;
 		for (Personne *p : allPersonnes) {
 			if (p != nullptr) {
 				p->calculNote();
 				p->mkMaskMatch();
+				flagNoClub &= p->isNoClub();
 			}
 		}
+//		cerr <<"flagNoClub="<<flagNoClub<<endl;
 
 		getPersSortNum(vp, Personne::PersonneLess, Personne::stIsPres);
 
@@ -383,6 +391,8 @@ bool Tirage::makeTirage(bool fl2, const vector<Personne*> *vtt) {
 				noteMax = note;
 				newmatchSel = newmatch;
 			}
+			if ( flagNoClub )
+				break;
 		}
 	}
 	if (!flagok)

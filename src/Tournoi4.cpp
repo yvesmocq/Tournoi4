@@ -36,7 +36,7 @@ using namespace std;
 
 
 
-bool test_partitionInt(void);
+bool test_partitionInt(bool fltrace);
 bool test_match(void);
 bool test_personne(void);
 bool test_tirage(void);
@@ -47,7 +47,7 @@ bool test_simu(void);
 
 bool test_all()
 {
-	if( !test_partitionInt() )
+	if( !test_partitionInt(true) )
 	{
 		cout <<"Erreur partitionInt"<<endl;
 		return false;

@@ -26,17 +26,23 @@
 #include <iostream>
 
 
-bool test_partitionInt()
+bool test_partitionInt(bool fltrace=false)
 {
 	PartitionInt p;
+
+	if ( fltrace )
+	{
+		int i = 0;
+		for ( const auto &res: p.getList())
+		{
+			cout <<"list "<<i++;
+			for (auto c : res )
+				cout<<" "<< c<<" ";
+			cout << endl;
+		}
+	}
+
 	return p.getList().size() == 20;
 
-//	for ( const auto &res: p.getList())
-//	{
-//		cout <<"list "<<i++;
-//		for (auto c : res )
-//			cout<<" "<< c<<" ";
-//		cout << endl;
-//	}
 }
 

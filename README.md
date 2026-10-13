@@ -1,4 +1,16 @@
-Tournoi4 : Logiciel d'organisation de tournoi de tennis de table loisir.
+Tournoi4 – Logiciel gratuit de gestion de tournois de tennis de table
+
+Tournoi4 est un logiciel libre en C++ permettant d'organiser des tournois de tennis de table en loisir, avec des parties en double sur des tables de quatre joueurs.
+
+Le programme organise les tours en tenant compte des résultats précédents afin de réunir des joueurs de niveau comparable. Il cherche également à limiter les confrontations répétées entre les mêmes joueurs et à éviter, autant que possible, que des joueurs du même club jouent ensemble.
+
+Le logiciel est distribué sous licence GPL-3.0.
+
+Langage : C++
+
+Système : Windows avec Cygwin ou linux
+
+Code source et installation : voir les instructions ci-dessous.
 
 Le principe est un tournoi où à chaque tour les tables de 4 joueurs sont définies.
 Ensuite 3 matchs en double sur chaque table sont effectués correspondant à toutes les combinaisons d'équipes possibles. Chaque joueur a un point par match gagné.
